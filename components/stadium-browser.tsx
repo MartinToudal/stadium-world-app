@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useDeferredValue, useMemo, useState } from "react";
-import { FlatList, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, spacing } from "../constants/theme";
@@ -8,7 +8,6 @@ import { useStadiumCollections } from "../lib/favorites";
 import {
   allCountries,
   capacityBands,
-  featuredCountries,
   featuredLeagues,
   matchesCapacityBand,
   sortModes,
@@ -39,6 +38,7 @@ export function StadiumBrowser({
   const [query, setQuery] = useState("");
   const [league, setLeague] = useState<string>("Alle");
   const [country, setCountry] = useState<string>("Alle");
+  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
   const [sortMode, setSortMode] = useState<(typeof sortModes)[number]>("Størst først");
   const [collectionFilter, setCollectionFilter] = useState(defaultCollectionFilter);
@@ -153,16 +153,52 @@ export function StadiumBrowser({
 
               <View style={styles.filterBlock}>
                 <Text style={styles.filterLabel}>Lande</Text>
-                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                  {["Alle", ...featuredCountries].map((option) => (
-                    <FilterChip
-                      active={country === option}
-                      key={option}
-                      label={option}
-                      onPress={() => setCountry(option)}
-                    />
-                  ))}
-                </ScrollView>
+                <View style={styles.dropdownWrap}>
+                  <Pressable
+                    onPress={() => setCountryMenuOpen((value) => !value)}
+                    style={({ pressed }) => [
+                      styles.dropdownTrigger,
+                      countryMenuOpen && styles.dropdownTriggerOpen,
+                      pressed && styles.dropdownTriggerPressed,
+                    ]}
+                  >
+                    <View>
+                      <Text style={styles.dropdownLabel}>Valgt land</Text>
+                      <Text style={styles.dropdownValue}>{country}</Text>
+                    </View>
+                    <Text style={styles.dropdownIcon}>{countryMenuOpen ? "▴" : "▾"}</Text>
+                  </Pressable>
+
+                  {countryMenuOpen ? (
+                    <View style={styles.dropdownMenu}>
+                      <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
+                        {["Alle", ...allCountries].map((option) => (
+                          <Pressable
+                            key={option}
+                            onPress={() => {
+                              setCountry(option);
+                              setCountryMenuOpen(false);
+                            }}
+                            style={({ pressed }) => [
+                              styles.dropdownOption,
+                              country === option && styles.dropdownOptionActive,
+                              pressed && styles.dropdownOptionPressed,
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.dropdownOptionText,
+                                country === option && styles.dropdownOptionTextActive,
+                              ]}
+                            >
+                              {option}
+                            </Text>
+                          </Pressable>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  ) : null}
+                </View>
               </View>
 
               {showCollectionFilters ? (
@@ -427,6 +463,75 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: spacing.md,
     paddingVertical: 16,
+  },
+  dropdownWrap: {
+    gap: spacing.sm,
+  },
+  dropdownTrigger: {
+    alignItems: "center",
+    backgroundColor: colors.paper,
+    borderColor: colors.line,
+    borderRadius: 18,
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.md,
+    paddingVertical: 14,
+  },
+  dropdownTriggerOpen: {
+    borderColor: colors.accent,
+  },
+  dropdownTriggerPressed: {
+    opacity: 0.88,
+  },
+  dropdownLabel: {
+    color: colors.muted,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
+  dropdownValue: {
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: "700",
+    marginTop: 4,
+  },
+  dropdownIcon: {
+    color: colors.navy,
+    fontSize: 18,
+    fontWeight: "800",
+  },
+  dropdownMenu: {
+    backgroundColor: colors.white,
+    borderColor: colors.line,
+    borderRadius: 18,
+    borderWidth: 1,
+    maxHeight: 280,
+    overflow: "hidden",
+  },
+  dropdownScroll: {
+    maxHeight: 280,
+  },
+  dropdownOption: {
+    borderTopColor: colors.paper,
+    borderTopWidth: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 14,
+  },
+  dropdownOptionActive: {
+    backgroundColor: colors.ink,
+  },
+  dropdownOptionPressed: {
+    opacity: 0.88,
+  },
+  dropdownOptionText: {
+    color: colors.ink,
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  dropdownOptionTextActive: {
+    color: colors.white,
   },
   filterBlock: {
     gap: spacing.sm,
