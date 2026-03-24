@@ -60,10 +60,10 @@ export default function MapScreen() {
           <View style={styles.heroOrbPrimary} />
           <View style={styles.heroOrbSecondary} />
           <Text style={styles.eyebrow}>GEOGRAFI</Text>
-          <Text style={styles.title}>Se stadioner efter region og gør kortlaget klar til iOS.</Text>
+          <Text style={styles.title}>Se stadioner efter region på et rigtigt koordinatkort.</Text>
           <Text style={styles.text}>
-            Denne skærm er bygget, så den kan bruge en rigtig native map-komponent på iPhone, mens web stadig har en
-            stabil fallback.
+            Webversionen viser stadionerne direkte på et koordinatkort, mens iPhone senere kan få en endnu stærkere
+            native map-oplevelse oven på samme data.
           </Text>
           <View style={styles.heroStats}>
             <StatCard inverted label="Region" value={region === "World" ? "Global" : region} />
