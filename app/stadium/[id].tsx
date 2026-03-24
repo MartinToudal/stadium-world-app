@@ -48,9 +48,12 @@ export default function StadiumDetailScreen() {
             </View>
             <FavoriteButton active={isFavorite(stadium.id)} onPress={() => toggleFavorite(stadium.id)} />
           </View>
-          {stadium.heroImageCredit ? (
+          {stadium.heroImageAuthor || stadium.heroImageLicense ? (
             <View style={styles.heroCreditWrap}>
-              <Text style={styles.heroCreditText}>Foto: {stadium.heroImageCredit}</Text>
+              {stadium.heroImageAuthor ? <Text style={styles.heroCreditText}>Foto: {stadium.heroImageAuthor}</Text> : null}
+              {stadium.heroImageLicense ? (
+                <Text style={styles.heroCreditText}>Licens: {stadium.heroImageLicense}</Text>
+              ) : null}
             </View>
           ) : null}
         </View>
@@ -127,6 +130,13 @@ export default function StadiumDetailScreen() {
           ) : null}
           {stadium.heroImagePage ? (
             <ActionButton label="Fotokilde" onPress={() => Linking.openURL(stadium.heroImagePage!)} secondary />
+          ) : null}
+          {stadium.heroImageLicenseUrl ? (
+            <ActionButton
+              label="Fotolicens"
+              onPress={() => Linking.openURL(stadium.heroImageLicenseUrl!)}
+              secondary
+            />
           ) : null}
         </View>
       </ScrollView>

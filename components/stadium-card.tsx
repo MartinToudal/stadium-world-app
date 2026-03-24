@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors, spacing } from "../constants/theme";
 import { useStadiumCollections } from "../lib/favorites";
@@ -16,7 +16,6 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
   const favorite = isFavorite(stadium.id);
   const visited = isVisited(stadium.id);
   const wishlisted = isWishlisted(stadium.id);
-  const hasHeroImage = Boolean(stadium.heroImageUrl);
 
   return (
     <Pressable
@@ -24,12 +23,7 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.heroBand}>
-        {hasHeroImage ? (
-          <Image resizeMode="cover" source={{ uri: stadium.heroImageUrl }} style={styles.heroImage} />
-        ) : (
-          <View style={styles.heroOrb} />
-        )}
-        <View style={[styles.heroOverlay, hasHeroImage ? styles.heroOverlayImage : null]} />
+        <View style={styles.heroOrb} />
         <View style={styles.heroTopRow}>
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{stadium.country.slice(0, 2).toUpperCase()}</Text>
@@ -46,9 +40,9 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
           />
         </View>
         <View style={styles.content}>
-          <Text style={[styles.team, hasHeroImage && styles.teamOnImage]}>{stadium.team}</Text>
-          <Text style={[styles.stadium, hasHeroImage && styles.stadiumOnImage]}>{stadium.stadiumName}</Text>
-          <Text style={[styles.meta, hasHeroImage && styles.metaOnImage]}>
+          <Text style={styles.team}>{stadium.team}</Text>
+          <Text style={styles.stadium}>{stadium.stadiumName}</Text>
+          <Text style={styles.meta}>
             {stadium.city} · {stadium.country}
           </Text>
           {visited || wishlisted ? (
@@ -129,14 +123,8 @@ const styles = StyleSheet.create({
   heroBand: {
     backgroundColor: colors.card,
     gap: spacing.md,
-    minHeight: 220,
     padding: spacing.md,
     position: "relative",
-  },
-  heroImage: {
-    ...StyleSheet.absoluteFillObject,
-    height: "100%",
-    width: "100%",
   },
   heroOrb: {
     backgroundColor: colors.sand,
@@ -147,18 +135,10 @@ const styles = StyleSheet.create({
     top: -36,
     width: 120,
   },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "transparent",
-  },
-  heroOverlayImage: {
-    backgroundColor: "rgba(24,22,31,0.42)",
-  },
   heroTopRow: {
     flexDirection: "row",
     gap: spacing.md,
     alignItems: "flex-start",
-    zIndex: 1,
   },
   badge: {
     alignItems: "center",
@@ -190,7 +170,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: 4,
-    zIndex: 1,
   },
   statusRow: {
     flexDirection: "row",
@@ -224,23 +203,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "800",
   },
-  teamOnImage: {
-    color: colors.white,
-  },
   stadium: {
     color: colors.navy,
     fontSize: 17,
     fontWeight: "700",
   },
-  stadiumOnImage: {
-    color: "#F7E9D8",
-  },
   meta: {
     color: colors.muted,
     fontSize: 14,
-  },
-  metaOnImage: {
-    color: "#E8DED1",
   },
   footer: {
     flexDirection: "row",
