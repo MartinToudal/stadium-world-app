@@ -6,8 +6,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FilterChip } from "../../components/filter-chip";
 import { StadiumMap } from "../../components/stadium-map";
 import { StadiumCard } from "../../components/stadium-card";
+import { StadiumStatusButton } from "../../components/stadium-status-button";
 import { colors, spacing } from "../../constants/theme";
-import { useFavorites } from "../../lib/favorites";
+import { useStadiumCollections } from "../../lib/favorites";
 import {
   capacityBands,
   featuredRegions,
@@ -23,16 +24,28 @@ import * as Linking from "expo-linking";
 export default function MapScreen() {
   const [region, setRegion] = useState("World");
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [collectionFilter, setCollectionFilter] = useState<"all" | "favorites" | "visited" | "wishlist">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { favorites, isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, visited, wishlist, isFavorite, isVisited, isWishlisted, toggleFavorite, toggleVisited, toggleWishlist } =
+    useStadiumCollections();
 
   const regionStadiums = useMemo(
     () =>
       filterByRegion(stadiums, region)
         .filter((stadium) => matchesCapacityBand(stadium, capacityBand))
-        .filter((stadium) => (favoritesOnly ? favorites.includes(stadium.id) : true)),
-    [capacityBand, favorites, favoritesOnly, region]
+        .filter((stadium) => {
+          switch (collectionFilter) {
+            case "favorites":
+              return favorites.includes(stadium.id);
+            case "visited":
+              return visited.includes(stadium.id);
+            case "wishlist":
+              return wishlist.includes(stadium.id);
+            default:
+              return true;
+          }
+        }),
+    [capacityBand, collectionFilter, favorites, region, visited, wishlist]
   );
   const previewStadiums = [...regionStadiums]
     .sort((a, b) => (b.capacity ?? 0) - (a.capacity ?? 0))
@@ -55,11 +68,7 @@ export default function MapScreen() {
           <View style={styles.heroStats}>
             <StatCard inverted label="Region" value={region === "World" ? "Global" : region} />
             <StatCard inverted label="Stadions" value={String(regionStadiums.length)} />
-            <StatCard
-              inverted
-              label="Lande"
-              value={String(new Set(regionStadiums.map((stadium) => stadium.country)).size)}
-            />
+            <StatCard inverted label="Besøgt" value={String(visited.length)} />
           </View>
         </View>
 
@@ -84,9 +93,19 @@ export default function MapScreen() {
             />
           ))}
           <FilterChip
-            active={favoritesOnly}
+            active={collectionFilter === "favorites"}
             label={`Favoritter (${favorites.length})`}
-            onPress={() => setFavoritesOnly((value) => !value)}
+            onPress={() => setCollectionFilter((value) => (value === "favorites" ? "all" : "favorites"))}
+          />
+          <FilterChip
+            active={collectionFilter === "visited"}
+            label={`Besøgt (${visited.length})`}
+            onPress={() => setCollectionFilter((value) => (value === "visited" ? "all" : "visited"))}
+          />
+          <FilterChip
+            active={collectionFilter === "wishlist"}
+            label={`Wishlist (${wishlist.length})`}
+            onPress={() => setCollectionFilter((value) => (value === "wishlist" ? "all" : "wishlist"))}
           />
         </ScrollView>
 
@@ -104,14 +123,6 @@ export default function MapScreen() {
                 <Text style={styles.selectedTitle}>{selectedStadium.team}</Text>
                 <Text style={styles.selectedSubtitle}>{selectedStadium.stadiumName}</Text>
               </View>
-              <Pressable
-                onPress={() => toggleFavorite(selectedStadium.id)}
-                style={[styles.favoritePill, isFavorite(selectedStadium.id) && styles.favoritePillActive]}
-              >
-                <Text style={[styles.favoritePillText, isFavorite(selectedStadium.id) && styles.favoritePillTextActive]}>
-                  {isFavorite(selectedStadium.id) ? "Favorit" : "Gem"}
-                </Text>
-              </Pressable>
             </View>
             <View style={styles.selectedStats}>
               <MiniStat label="Liga" value={selectedStadium.league} />
@@ -124,6 +135,30 @@ export default function MapScreen() {
               </Pressable>
               <Pressable onPress={() => Linking.openURL(stadiumMapUrl(selectedStadium))} style={styles.secondaryAction}>
                 <Text style={styles.secondaryActionText}>Åbn i kort</Text>
+              </Pressable>
+            </View>
+            <View style={styles.selectedStatusRow}>
+              <StadiumStatusButton
+                active={isVisited(selectedStadium.id)}
+                activeLabel="Besøgt"
+                inactiveLabel="Markér besøgt"
+                onPress={() => toggleVisited(selectedStadium.id)}
+                tone="visited"
+              />
+              <StadiumStatusButton
+                active={isWishlisted(selectedStadium.id)}
+                activeLabel="På wishlist"
+                inactiveLabel="Til wishlist"
+                onPress={() => toggleWishlist(selectedStadium.id)}
+                tone="wishlist"
+              />
+              <Pressable
+                onPress={() => toggleFavorite(selectedStadium.id)}
+                style={[styles.favoritePill, isFavorite(selectedStadium.id) && styles.favoritePillActive]}
+              >
+                <Text style={[styles.favoritePillText, isFavorite(selectedStadium.id) && styles.favoritePillTextActive]}>
+                  {isFavorite(selectedStadium.id) ? "Favorit" : "Gem"}
+                </Text>
               </Pressable>
             </View>
           </View>

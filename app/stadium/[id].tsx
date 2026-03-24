@@ -4,14 +4,15 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { FavoriteButton } from "../../components/favorite-button";
+import { StadiumStatusButton } from "../../components/stadium-status-button";
 import { colors, spacing } from "../../constants/theme";
-import { useFavorites } from "../../lib/favorites";
+import { useStadiumCollections } from "../../lib/favorites";
 import { findStadiumById, formatCapacity, stadiumMapUrl } from "../../lib/stadiums";
 
 export default function StadiumDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const stadium = findStadiumById(id);
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite, isVisited, isWishlisted, toggleFavorite, toggleVisited, toggleWishlist } = useStadiumCollections();
 
   if (!stadium) {
     return (
@@ -76,6 +77,30 @@ export default function StadiumDetailScreen() {
           <InfoCard label="Kildehost" value={stadium.sourceHost ?? "Ukendt"} />
           <InfoCard label="Kapacitetsklasse" value={stadium.capacityBucket} />
           <InfoCard label="Aliaser" value={stadium.aliases[0] ?? "Ingen"} />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Din tracker</Text>
+          <Text style={styles.sectionText}>
+            Brug stadionets egen status til at skelne mellem steder, du allerede har været, og steder du vil planlægge
+            en tur til senere.
+          </Text>
+          <View style={styles.trackerRow}>
+            <StadiumStatusButton
+              active={isVisited(stadium.id)}
+              activeLabel="Besøgt"
+              inactiveLabel="Markér besøgt"
+              onPress={() => toggleVisited(stadium.id)}
+              tone="visited"
+            />
+            <StadiumStatusButton
+              active={isWishlisted(stadium.id)}
+              activeLabel="På wishlist"
+              inactiveLabel="Til wishlist"
+              onPress={() => toggleWishlist(stadium.id)}
+              tone="wishlist"
+            />
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -257,6 +282,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.md,
+  },
+  trackerRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+    marginTop: spacing.xs,
   },
   button: {
     borderRadius: 18,

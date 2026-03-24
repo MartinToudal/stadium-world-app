@@ -2,17 +2,20 @@ import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors, spacing } from "../constants/theme";
-import { useFavorites } from "../lib/favorites";
+import { useStadiumCollections } from "../lib/favorites";
 import { Stadium, formatCapacity } from "../lib/stadiums";
 import { FavoriteButton } from "./favorite-button";
+import { StadiumStatusButton } from "./stadium-status-button";
 
 type StadiumCardProps = {
   stadium: Stadium;
 };
 
 export function StadiumCard({ stadium }: StadiumCardProps) {
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite, isVisited, isWishlisted, toggleFavorite, toggleVisited, toggleWishlist } = useStadiumCollections();
   const favorite = isFavorite(stadium.id);
+  const visited = isVisited(stadium.id);
+  const wishlisted = isWishlisted(stadium.id);
 
   return (
     <Pressable
@@ -42,6 +45,20 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
           <Text style={styles.meta}>
             {stadium.city} · {stadium.country}
           </Text>
+          {visited || wishlisted ? (
+            <View style={styles.statusRow}>
+              {visited ? (
+                <View style={[styles.statusPill, styles.statusVisited]}>
+                  <Text style={[styles.statusPillText, styles.statusVisitedText]}>Besøgt</Text>
+                </View>
+              ) : null}
+              {wishlisted ? (
+                <View style={[styles.statusPill, styles.statusWishlist]}>
+                  <Text style={[styles.statusPillText, styles.statusWishlistText]}>Wishlist</Text>
+                </View>
+              ) : null}
+            </View>
+          ) : null}
         </View>
       </View>
 
@@ -58,6 +75,29 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
           <Text style={styles.footerLabel}>Niveau</Text>
           <Text style={styles.footerValue}>{stadium.tier ?? "?"}</Text>
         </View>
+      </View>
+
+      <View style={styles.actionsRow}>
+        <StadiumStatusButton
+          active={visited}
+          activeLabel="Besøgt"
+          inactiveLabel="Markér besøgt"
+          onPress={(event) => {
+            event?.stopPropagation();
+            toggleVisited(stadium.id);
+          }}
+          tone="visited"
+        />
+        <StadiumStatusButton
+          active={wishlisted}
+          activeLabel="På wishlist"
+          inactiveLabel="Til wishlist"
+          onPress={(event) => {
+            event?.stopPropagation();
+            toggleWishlist(stadium.id);
+          }}
+          tone="wishlist"
+        />
       </View>
     </Pressable>
   );
@@ -131,6 +171,33 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 4,
   },
+  statusRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+  },
+  statusPill: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  statusVisited: {
+    backgroundColor: "#DCEEE7",
+  },
+  statusWishlist: {
+    backgroundColor: "#F7E9C8",
+  },
+  statusPillText: {
+    fontSize: 11,
+    fontWeight: "800",
+  },
+  statusVisitedText: {
+    color: colors.moss,
+  },
+  statusWishlistText: {
+    color: colors.ink,
+  },
   team: {
     color: colors.ink,
     fontSize: 24,
@@ -147,6 +214,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  actionsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
     paddingHorizontal: spacing.md,
     paddingBottom: spacing.md,

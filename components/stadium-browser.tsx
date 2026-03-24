@@ -4,7 +4,7 @@ import { FlatList, Platform, ScrollView, StyleSheet, Text, TextInput, View } fro
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, spacing } from "../constants/theme";
-import { useFavorites } from "../lib/favorites";
+import { useStadiumCollections } from "../lib/favorites";
 import {
   allCountries,
   capacityBands,
@@ -19,25 +19,27 @@ import { FilterChip } from "./filter-chip";
 import { StadiumCard } from "./stadium-card";
 
 type StadiumBrowserProps = {
-  defaultFavoritesOnly?: boolean;
+  defaultCollectionFilter?: "all" | "favorites" | "visited" | "wishlist";
   heroTitle: string;
   heroText: string;
   panelTitle: string;
+  showCollectionFilters?: boolean;
 };
 
 export function StadiumBrowser({
-  defaultFavoritesOnly = false,
+  defaultCollectionFilter = "all",
   heroTitle,
   heroText,
   panelTitle,
+  showCollectionFilters = false,
 }: StadiumBrowserProps) {
   const [query, setQuery] = useState("");
   const [league, setLeague] = useState<string>("Alle");
   const [country, setCountry] = useState<string>("Alle");
-  const [favoritesOnly, setFavoritesOnly] = useState(defaultFavoritesOnly);
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
   const [sortMode, setSortMode] = useState<(typeof sortModes)[number]>("Størst først");
-  const { favorites } = useFavorites();
+  const [collectionFilter, setCollectionFilter] = useState(defaultCollectionFilter);
+  const { favorites, visited, wishlist } = useStadiumCollections();
   const deferredQuery = useDeferredValue(query);
 
   const filtered = useMemo(() => {
@@ -47,7 +49,18 @@ export function StadiumBrowser({
       stadiums
       .filter((stadium) => (league === "Alle" ? true : stadium.league === league))
       .filter((stadium) => (country === "Alle" ? true : stadium.country === country))
-      .filter((stadium) => (favoritesOnly ? favorites.includes(stadium.id) : true))
+      .filter((stadium) => {
+        switch (collectionFilter) {
+          case "favorites":
+            return favorites.includes(stadium.id);
+          case "visited":
+            return visited.includes(stadium.id);
+          case "wishlist":
+            return wishlist.includes(stadium.id);
+          default:
+            return true;
+        }
+      })
       .filter((stadium) => matchesCapacityBand(stadium, capacityBand))
       .filter((stadium) => {
         if (!trimmedQuery) {
@@ -55,12 +68,12 @@ export function StadiumBrowser({
         }
 
         const haystack =
-          `${stadium.team} ${stadium.stadiumName} ${stadium.city} ${stadium.country} ${stadium.league}`.toLowerCase();
+          `${stadium.team} ${stadium.stadiumName} ${stadium.city} ${stadium.country} ${stadium.league} ${stadium.aliases.join(" ")} ${stadium.tags.join(" ")}`.toLowerCase();
         return haystack.includes(trimmedQuery);
       }),
       sortMode
     );
-  }, [capacityBand, country, deferredQuery, favorites, favoritesOnly, league, sortMode]);
+  }, [capacityBand, collectionFilter, country, deferredQuery, favorites, league, sortMode, visited, wishlist]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -90,8 +103,12 @@ export function StadiumBrowser({
                     <Text style={styles.heroStatLabel}>lande</Text>
                   </View>
                   <View style={styles.heroStat}>
-                    <Text style={styles.heroStatValue}>{favorites.length}</Text>
-                    <Text style={styles.heroStatLabel}>favoritter</Text>
+                    <Text style={styles.heroStatValue}>{visited.length}</Text>
+                    <Text style={styles.heroStatLabel}>besøgte stadions</Text>
+                  </View>
+                  <View style={styles.heroStat}>
+                    <Text style={styles.heroStatValue}>{wishlist.length}</Text>
+                    <Text style={styles.heroStatLabel}>på wishlist</Text>
                   </View>
                 </View>
               </View>
@@ -143,21 +160,49 @@ export function StadiumBrowser({
                 </ScrollView>
               </View>
 
-              <View style={styles.filterBlock}>
-                <Text style={styles.filterLabel}>Kuratering</Text>
-                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                  <FilterChip
-                    active={!favoritesOnly}
-                    label="Alle stadions"
-                    onPress={() => setFavoritesOnly(false)}
-                  />
-                  <FilterChip
-                    active={favoritesOnly}
-                    label={`Favoritter (${favorites.length})`}
-                    onPress={() => setFavoritesOnly(true)}
-                  />
-                </ScrollView>
-              </View>
+              {showCollectionFilters ? (
+                <View style={styles.filterBlock}>
+                  <Text style={styles.filterLabel}>Samlinger</Text>
+                  <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
+                    <FilterChip
+                      active={collectionFilter === "all"}
+                      label="Alle gemte spor"
+                      onPress={() => setCollectionFilter("all")}
+                    />
+                    <FilterChip
+                      active={collectionFilter === "favorites"}
+                      label={`Favoritter (${favorites.length})`}
+                      onPress={() => setCollectionFilter("favorites")}
+                    />
+                    <FilterChip
+                      active={collectionFilter === "visited"}
+                      label={`Besøgt (${visited.length})`}
+                      onPress={() => setCollectionFilter("visited")}
+                    />
+                    <FilterChip
+                      active={collectionFilter === "wishlist"}
+                      label={`Wishlist (${wishlist.length})`}
+                      onPress={() => setCollectionFilter("wishlist")}
+                    />
+                  </ScrollView>
+                </View>
+              ) : (
+                <View style={styles.filterBlock}>
+                  <Text style={styles.filterLabel}>Kuratering</Text>
+                  <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
+                    <FilterChip
+                      active={collectionFilter === "all"}
+                      label="Alle stadions"
+                      onPress={() => setCollectionFilter("all")}
+                    />
+                    <FilterChip
+                      active={collectionFilter === "favorites"}
+                      label={`Favoritter (${favorites.length})`}
+                      onPress={() => setCollectionFilter("favorites")}
+                    />
+                  </ScrollView>
+                </View>
+              )}
 
               <View style={styles.filterBlock}>
                 <Text style={styles.filterLabel}>Kapacitet</Text>

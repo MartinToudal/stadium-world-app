@@ -1,6 +1,7 @@
 {
   "name": "stadium-world-app",
   "version": "1.0.0",
+  "packageManager": "npm@11.9.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -8,7 +9,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "sync:data": "node ./scripts/sync-stadiums.mjs",
-    "build:web": "npm run sync:data && expo export --platform web"
+    "build:web": "npm run sync:data && CI=1 expo export --platform web"
+  },
+  "engines": {
+    "node": ">=20 <25"
   },
   "dependencies": {
     "@expo/metro-runtime": "~55.0.6",
