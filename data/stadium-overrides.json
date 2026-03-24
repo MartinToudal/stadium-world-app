@@ -1,0 +1,38 @@
+{
+  "barcelona": {
+    "statusNote": "Barcelona bruger i denne fase Estadi Olímpic Lluís Companys som midlertidig hjemmebane under Camp Nou-projektet.",
+    "aliases": ["Montjuïc Olympic Stadium"],
+    "tags": ["temporary-home", "historic-venue"]
+  },
+  "everton": {
+    "statusNote": "Hill Dickinson Stadium markerer Evertons nye æra ved Bramley-Moore Dock.",
+    "aliases": ["Everton Stadium", "Bramley-Moore Dock Stadium"],
+    "tags": ["new-stadium", "waterfront"]
+  },
+  "internazionale": {
+    "statusNote": "Inter deler San Siro med Milan, hvilket gør den til en af de mest ikoniske delte hjemmebaner i Europa.",
+    "aliases": ["Stadio Giuseppe Meazza"],
+    "tags": ["shared-stadium", "iconic"]
+  },
+  "milan": {
+    "statusNote": "Milan deler San Siro med Inter og er en del af stadionets særlige derby-identitet.",
+    "aliases": ["Stadio Giuseppe Meazza"],
+    "tags": ["shared-stadium", "iconic"]
+  },
+  "roma": {
+    "statusNote": "Roma spiller på Stadio Olimpico, som deles med Lazio.",
+    "tags": ["shared-stadium", "capital-city"]
+  },
+  "lazio": {
+    "statusNote": "Lazio spiller på Stadio Olimpico, som deles med Roma.",
+    "tags": ["shared-stadium", "capital-city"]
+  },
+  "seattle-sounders": {
+    "statusNote": "Lumen Field er en stor multi-purpose arena, som giver Seattle en markant hjemmestemning i MLS.",
+    "tags": ["multi-purpose", "mls"]
+  },
+  "al-hilal": {
+    "statusNote": "Kingdom Arena er et nyt og centralt stadionprojekt i Riyadhs moderne sportslandskab.",
+    "tags": ["new-era", "riyadh"]
+  }
+}
