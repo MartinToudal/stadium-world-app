@@ -8,6 +8,7 @@ export default function SavedScreen() {
       heroText="Din personlige stadionhistorik ligger lokalt på enheden og kan senere deles direkte med en rigtig iOS-app med samme state-lag."
       panelTitle="Dine samlinger"
       showCollectionFilters
+      showTripPlanner
     />
   );
 }

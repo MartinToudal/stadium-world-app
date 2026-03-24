@@ -17,6 +17,7 @@ import {
 } from "../lib/stadiums";
 import { FilterChip } from "./filter-chip";
 import { StadiumCard } from "./stadium-card";
+import { TripPlannerPanel } from "./trip-planner-panel";
 
 type StadiumBrowserProps = {
   defaultCollectionFilter?: "all" | "favorites" | "visited" | "wishlist";
@@ -24,6 +25,7 @@ type StadiumBrowserProps = {
   heroText: string;
   panelTitle: string;
   showCollectionFilters?: boolean;
+  showTripPlanner?: boolean;
 };
 
 export function StadiumBrowser({
@@ -32,6 +34,7 @@ export function StadiumBrowser({
   heroText,
   panelTitle,
   showCollectionFilters = false,
+  showTripPlanner = false,
 }: StadiumBrowserProps) {
   const [query, setQuery] = useState("");
   const [league, setLeague] = useState<string>("Alle");
@@ -113,6 +116,8 @@ export function StadiumBrowser({
                 </View>
               </View>
             </View>
+
+            {showTripPlanner ? <TripPlannerPanel /> : null}
 
             <View style={styles.searchPanel}>
               <View style={styles.panelHeader}>
