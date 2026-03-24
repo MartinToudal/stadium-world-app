@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const csvPath = path.resolve(__dirname, "../../opta_top100_stadiums.csv");
+const csvCandidates = [
+  path.resolve(__dirname, "../data/opta_top100_stadiums.csv"),
+  path.resolve(__dirname, "../../opta_top100_stadiums.csv"),
+];
 const outputPath = path.resolve(__dirname, "../data/stadiums.json");
 const overridesPath = path.resolve(__dirname, "../data/stadium-overrides.json");
 
@@ -55,7 +58,18 @@ function toNumber(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function resolveCsvPath() {
+  const match = csvCandidates.find((candidate) => fs.existsSync(candidate));
+
+  if (!match) {
+    throw new Error(`Could not find opta_top100_stadiums.csv in any expected location: ${csvCandidates.join(", ")}`);
+  }
+
+  return match;
+}
+
 function main() {
+  const csvPath = resolveCsvPath();
   const csv = fs.readFileSync(csvPath, "utf8");
   const rows = parseCsv(csv);
   const overrides = JSON.parse(fs.readFileSync(overridesPath, "utf8"));
@@ -114,7 +128,7 @@ function main() {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, `${JSON.stringify(stadiums, null, 2)}\n`, "utf8");
 
-  console.log(`Synced ${stadiums.length} stadiums to ${outputPath}`);
+  console.log(`Synced ${stadiums.length} stadiums from ${csvPath} to ${outputPath}`);
 }
 
 main();

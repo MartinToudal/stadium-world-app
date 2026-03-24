@@ -1,0 +1,101 @@
+id,name,team,league,country,tier,city,lat,lon,capacity,opened,surface,source
+arsenal,Emirates Stadium,Arsenal,Premier League,United Kingdom,1,London,51.555,-0.10833333333333334,60338,2006,,https://www.wikidata.org/wiki/Q163995
+bayern-munchen,Allianz Arena,Bayern München,Bundesliga,Germany,1,Munich,48.218775,11.624752777778,66000,,,https://www.wikidata.org/wiki/Q127429
+barcelona,Estadi Olímpic Lluís Companys,Barcelona,La Liga,Spain,1,Barcelona,41.364722,2.155556,55926,1929,,https://www.wikidata.org/wiki/Q275715
+real-madrid,Santiago Bernabéu,Real Madrid,La Liga,Spain,1,Madrid,40.452058,-3.690753,,1982,,https://www.wikidata.org/wiki/Q2704346
+manchester-city,Etihad Stadium,Manchester City,Premier League,United Kingdom,1,Manchester,53.483055555556,-2.2002777777778,55017,1999,,https://www.wikidata.org/wiki/Q48159
+paris-saint-germain,Parc des Princes,Paris Saint-Germain,Ligue 1,France,1,Paris,48.84145,2.25305,47930,1967,,https://www.wikidata.org/wiki/Q193431
+liverpool,Anfield,Liverpool,Premier League,United Kingdom,1,Liverpool,53.43083333333333,-2.9608333333333334,53394,1884,,https://www.wikidata.org/wiki/Q45671
+aston-villa,Villa Park,Aston Villa,Premier League,United Kingdom,1,Birmingham,52.509166666667,-1.8847222222222,42640,1896,,https://www.wikidata.org/wiki/Q175339
+manchester-united,Old Trafford,Manchester United,Premier League,United Kingdom,1,Manchester,53.463055555556,-2.2913888888889,75731,,,https://www.wikidata.org/wiki/Q83457
+internazionale,San Siro,Internazionale,Serie A,Italy,1,Milan,45.47444444,9.14027778,,,,https://www.wikidata.org/wiki/Q1149910
+atletico-de-madrid,Riyadh Air Metropolitano,Atlético de Madrid,La Liga,Spain,1,Madrid,40.436111,-3.599444,70692,1992,,https://www.wikidata.org/wiki/Q1369687
+chelsea,Stamford Bridge,Chelsea,Premier League,United Kingdom,1,London,51.481666666667,-0.19111111111111,41875,1877,,https://www.wikidata.org/wiki/Q171458
+sporting-cp,Estádio José Alvalade,Sporting CP,Primeira Liga,Portugal,1,Lisbon,38.761194444444,-9.1607833333333,52095,2003,,https://www.wikidata.org/wiki/Q287359
+brighton-hove-albion,Falmer Stadium,Brighton & Hove Albion,Premier League,United Kingdom,1,Brighton,50.861822222222,-0.083277777777778,31800,2008,,https://www.wikidata.org/wiki/Q619409
+newcastle-united,St James' Park,Newcastle United,Premier League,United Kingdom,1,Newcastle upon Tyne,54.975555555556,-1.6216666666667,52305,1892,,https://www.wikidata.org/wiki/Q191774
+borussia-dortmund,Signal Iduna Park,Borussia Dortmund,Bundesliga,Germany,1,Dortmund,51.4925,7.451667,81359,1971,,https://www.wikidata.org/wiki/Q150928
+brentford,Gtech Community Stadium,Brentford,Premier League,United Kingdom,1,London,51.490825,-0.2887,20000,2020,,https://www.wikidata.org/wiki/Q4961609
+milan,San Siro,Milan,Serie A,Italy,1,Milan,45.47444444,9.14027778,,,,https://www.wikidata.org/wiki/Q1149910
+afc-bournemouth,Vitality Stadium,AFC Bournemouth,Premier League,United Kingdom,1,Bournemouth,50.735278,-1.838333,12000,1910,,https://www.wikidata.org/wiki/Q619094
+benfica,Estádio da Luz,Benfica,Primeira Liga,Portugal,1,Lisbon,38.75277777777778,-9.184722222222222,68100,2003,,https://www.wikidata.org/wiki/Q7875112
+porto,Estádio do Dragão,Porto,Primeira Liga,Portugal,1,Porto,41.161758,-8.583933,50033,2003,,https://www.wikidata.org/wiki/Q271454
+everton,Hill Dickinson Stadium,Everton,Premier League,United Kingdom,1,Liverpool,53.4250789,-3.0027851,52769,2021,,https://www.wikidata.org/wiki/Q29347805
+napoli,Stadio Diego Armando Maradona,Napoli,Serie A,Italy,1,Naples,40.827967,14.193008,76000,1952,,https://www.wikidata.org/wiki/Q82709
+bayer-leverkusen,BayArena,Bayer Leverkusen,Bundesliga,Germany,1,Leverkusen,51.038255555556,7.0022055555556,30210,1958,,https://www.wikidata.org/wiki/Q156630
+juventus,Allianz Stadium,Juventus,Serie A,Italy,1,Turin,45.109594,7.641247,41689,2009,,https://www.wikidata.org/wiki/Q62149
+fulham,Craven Cottage,Fulham,Premier League,United Kingdom,1,London,51.475,-0.22166666666667,25700,1780,,https://www.wikidata.org/wiki/Q318043
+atalanta,Gewiss Stadium,Atalanta,Serie A,Italy,1,Bergamo,45.708889,9.680833,24950,1927,,https://www.wikidata.org/wiki/Q780526
+crystal-palace,Selhurst Park,Crystal Palace,Premier League,United Kingdom,1,London,51.398333333333,-0.085555555555556,26255,1924,,https://www.wikidata.org/wiki/Q1066373
+como,Stadio Giuseppe Sinigaglia,Como,Serie A,Italy,1,Como,45.81388889,9.07222222,13602,1927,,https://www.wikidata.org/wiki/Q115372
+roma,Stadio Olimpico,Roma,Serie A,Italy,1,Rome,41.93388888888889,12.454722222222223,70634,1928,,https://www.wikidata.org/wiki/Q159884
+union-saint-gilloise,Stade Joseph Marien,Union Saint-Gilloise,Belgian Pro League,Belgium,1,Brussels,50.8178,4.32917,5100,,,https://www.wikidata.org/wiki/Q3495665
+nottingham-forest,City Ground,Nottingham Forest,Premier League,United Kingdom,1,Nottingham,52.94,-1.132778,30404,,,https://www.wikidata.org/wiki/Q593446
+bod-glimt,Aspmyra Stadion,Bodø / Glimt,Eliteserien,Norway,1,Bodø,67.2775,14.384166666667,7354,1966,,https://www.wikidata.org/wiki/Q376674
+club-brugge,Jan Breydel Stadium,Club Brugge,Belgian Pro League,Belgium,1,Bruges,51.193269,3.181311,29062,1975,,https://www.wikidata.org/wiki/Q1070150
+galatasaray,RAMS Park,Galatasaray,Super Lig,Turkey,1,Istanbul,41.10338888888889,28.991,52652,,,https://www.wikidata.org/wiki/Q81492
+villarreal,Estadio de la Cerámica,Villarreal,La Liga,Spain,1,Villarreal,39.944167,-0.103611,24891,1923,,https://www.wikidata.org/wiki/Q741157
+lens,Stade Bollaert-Delelis,Lens,Ligue 1,France,1,Lens,50.4329,2.81491,38058,,,https://www.wikidata.org/wiki/Q854122
+tottenham-hotspur,Tottenham Hotspur Stadium,Tottenham Hotspur,Premier League,United Kingdom,1,London,51.604444444444,-0.066388888888889,62850,,,https://www.wikidata.org/wiki/Q55074091
+stuttgart,MHPArena,Stuttgart,Bundesliga,Germany,1,Stuttgart,48.792222,9.231944,60058,1933,,https://www.wikidata.org/wiki/Q152349
+rb-leipzig,Red Bull Arena,RB Leipzig,Bundesliga,Germany,1,Leipzig,51.345833,12.348056,42000,,,https://www.wikidata.org/wiki/Q210466
+psv,Philips Stadion,PSV,Eredivisie,Netherlands,1,Eindhoven,51.4417,5.4674,36500,1910,,https://www.wikidata.org/wiki/Q500972
+monaco,Stade Louis II,Monaco,Ligue 1,Monaco,1,Monaco,43.727778,7.415556,18523,1981,,https://www.wikidata.org/wiki/Q318851
+leeds-united,Elland Road,Leeds United,Premier League,United Kingdom,1,Leeds,53.777777777778,-1.5722222222222,37890,1897,,https://www.wikidata.org/wiki/Q619505
+celta-de-vigo,Abanca Balaídos,Celta de Vigo,La Liga,Spain,1,Vigo,42.211861,-8.740328,22803,,,https://www.wikidata.org/wiki/Q1326578
+real-betis,Estadio Benito Villamarín,Real Betis,La Liga,Spain,1,Seville,37.356403,-5.981611,60721,1929,,https://www.wikidata.org/wiki/Q126844
+sunderland,Stadium of Light,Sunderland,Premier League,United Kingdom,1,Sunderland,54.91442906944445,-1.3881729694444445,48339,,,https://www.wikidata.org/wiki/Q31969
+olympique-marseille,Stade Vélodrome,Olympique Marseille,Ligue 1,France,1,Marseille,43.269241,5.394907,67394,1935,,https://www.wikidata.org/wiki/Q202150
+olympique-lyonnais,Groupama Stadium,Olympique Lyonnais,Ligue 1,France,1,Décines-Charpieu,45.765224,4.982131,59286,2012,,https://www.wikidata.org/wiki/Q8507
+west-ham-united,London Stadium,West Ham United,Premier League,United Kingdom,1,London,51.538611111111,-0.016388888888889,62500,2008,,https://www.wikidata.org/wiki/Q172190
+lazio,Stadio Olimpico,Lazio,Serie A,Italy,1,Rome,41.93388888888889,12.454722222222223,70634,1928,,https://www.wikidata.org/wiki/Q159884
+flamengo,Maracanã,Flamengo,Brasileirão,Brazil,1,Rio de Janeiro,-22.9098,-43.2339,,,,https://www.wikidata.org/wiki/Q10275958
+strasbourg,Stade de la Meinau,Strasbourg,Ligue 1,France,1,Strasbourg,48.55942,7.75738,26109,1914,,https://www.wikidata.org/wiki/Q374883
+real-sociedad,Reale Arena,Real Sociedad,La Liga,Spain,1,San Sebastián,43.301378,-1.973617,40000,1991,,https://www.wikidata.org/wiki/Q917845
+hoffenheim,PreZero Arena,Hoffenheim,Bundesliga,Germany,1,Sinsheim,49.239,8.888278,30150,2009,,https://www.wikidata.org/wiki/Q129870
+midtjylland,MCH Arena,Midtjylland,Superliga,Denmark,1,Herning,56.11666667,8.95166667,11809,2004,,https://www.wikidata.org/wiki/Q1557426
+olympiakos-piraeus,Karaiskakis Stadium,Olympiakos Piraeus,Super League Greece,Greece,1,Piraeus,37.946169,23.664536,33334,1896,,https://www.wikidata.org/wiki/Q213508
+lille,Stade Pierre-Mauroy,Lille,Ligue 1,France,1,Villeneuve-d'Ascq,50.611962,3.130631,50000,2009,,https://www.wikidata.org/wiki/Q1410402
+fenerbahce,Şükrü Saracoğlu Stadium,Fenerbahçe,Super Lig,Turkey,1,Istanbul,40.9875,29.036666666666665,50530,1908,,https://www.wikidata.org/wiki/Q222865
+athletic-club,San Mamés,Athletic Club,La Liga,Spain,1,Bilbao,40.992841666667,-3.7085138888889,,,,https://www.wikidata.org/wiki/Q21003595
+sporting-braga,Estádio Municipal de Braga,Sporting Braga,Primeira Liga,Portugal,1,Braga,41.5624,-8.4308,30286,2003,,https://www.wikidata.org/wiki/Q849239
+slavia-praha,Fortuna Arena,Slavia Praha,Czech First League,Czech Republic,1,Prague,50.0675,14.4715,20800,2008,,https://www.wikidata.org/wiki/Q64858
+palmeiras,Allianz Parque,Palmeiras,Brasileirão,Brazil,1,São Paulo,-23.527556,-46.678417,43713,2010,,https://www.wikidata.org/wiki/Q4788902
+bologna,Stadio Renato Dall'Ara,Bologna,Serie A,Italy,1,Bologna,44.4922,11.3098,36462,1925,,https://www.wikidata.org/wiki/Q757182
+dinamo-zagreb,Stadion Maksimir,Dinamo Zagreb,HNL,Croatia,1,Zagreb,45.818858333333,16.018077777778,60000,1911,,https://www.wikidata.org/wiki/Q723603
+al-hilal,Kingdom Arena,Al Hilal,Saudi Pro League,Saudi Arabia,1,Riyadh,24.778166666666667,46.60530555555555,,,,https://www.wikidata.org/wiki/Q123412407
+osasuna,El Sadar,Osasuna,La Liga,Spain,1,Pamplona,42.796667,-1.636944,23576,1967,,https://www.wikidata.org/wiki/Q735783
+rennes,Roazhon Park,Rennes,Ligue 1,France,1,Rennes,48.10743,-1.71282,31127,1912,,https://www.wikidata.org/wiki/Q1121760
+wolverhampton-wanderers,Molineux Stadium,Wolverhampton Wanderers,Premier League,United Kingdom,1,Wolverhampton,52.590277777778,-2.1302777777778,30852,1889,,https://www.wikidata.org/wiki/Q380823
+freiburg,Europa-Park Stadion,Freiburg,Bundesliga,Germany,1,Freiburg im Breisgau,48.021536,7.830006,34700,2021,,https://www.wikidata.org/wiki/Q64586775
+valencia,Mestalla,Valencia,La Liga,Spain,1,Valencia,39.4721,-0.359136,,,,https://www.wikidata.org/wiki/Q5645611
+eintracht-frankfurt,Deutsche Bank Park,Eintracht Frankfurt,Bundesliga,Germany,1,Frankfurt,50.068611,8.645278,51500,1925,,https://www.wikidata.org/wiki/Q157273
+coventry-city,Coventry Building Society Arena,Coventry City,Championship,United Kingdom,2,Coventry,52.448056,-1.495556,32609,2005,,https://www.wikidata.org/wiki/Q842077
+mainz-05,MEWA Arena,Mainz 05,Bundesliga,Germany,1,Mainz,49.984167,8.224167,34034,2011,,https://www.wikidata.org/wiki/Q392494
+al-nassr,Al-Awwal Park,Al Nassr,Saudi Pro League,Saudi Arabia,1,Riyadh,24.72930556,46.62369444,25000,,,https://www.wikidata.org/wiki/Q20421103
+racing-club,Estadio Presidente Perón,Racing Club,Argentine Primera División,Argentina,1,Avellaneda,-34.6675,-58.368611,55880,1950,,https://www.wikidata.org/wiki/Q1196031
+seattle-sounders,Lumen Field,Seattle Sounders,MLS,United States,1,Seattle,47.595277777778,-122.33166666667,67000,2002,,https://www.wikidata.org/wiki/Q612736
+getafe,Coliseum,Getafe,La Liga,Spain,1,Getafe,40.325556,-3.714722,16500,1998,,https://www.wikidata.org/wiki/Q929109
+rayo-vallecano,Campo de Fútbol de Vallecas,Rayo Vallecano,La Liga,Spain,1,Madrid,40.391944,-3.658961,14708,1972,,https://www.wikidata.org/wiki/Q983806
+zenit,Gazprom Arena,Zenit,Russian Premier League,Russia,1,Saint Petersburg,59.972953,30.220533,68134,2017,,https://www.wikidata.org/wiki/Q722970
+inter-miami,Chase Stadium,Inter Miami,MLS,United States,1,Fort Lauderdale,26.193055555555556,-80.16111111111111,18000,,,https://www.wikidata.org/wiki/Q65240568
+los-angeles,BMO Stadium,Los Angeles,MLS,United States,1,Los Angeles,34.013,-118.285,22000,2018,,https://www.wikidata.org/wiki/Q22096111
+boca-juniors,La Bombonera,Boca Juniors,Argentine Primera División,Argentina,1,Buenos Aires,-34.63565,-58.36465,58840,,,https://www.wikidata.org/wiki/Q499855
+fiorentina,Stadio Artemio Franchi,Fiorentina,Serie A,Italy,1,Florence,43.780822,11.282258,43325,1930,,https://www.wikidata.org/wiki/Q270474
+toluca,Estadio Nemesio Díez,Toluca,Liga MX,Mexico,1,Toluca,19.287286,-99.666794,21091,,,https://www.wikidata.org/wiki/Q604859
+burnley,Turf Moor,Burnley,Premier League,United Kingdom,1,Burnley,53.789064,-2.230225,22546,1883,,https://www.wikidata.org/wiki/Q683112
+crvena-zvezda,Rajko Mitić Stadium,Crvena zvezda,Serbian SuperLiga,Serbia,1,Belgrade,44.78333333333333,20.46472222222222,55538,,,https://www.wikidata.org/wiki/Q478000
+paok,Toumba Stadium,PAOK,Super League Greece,Greece,1,Thessaloniki,40.613839,22.972422,28703,1959,,https://www.wikidata.org/wiki/Q1141292
+ipswich-town,Portman Road,Ipswich Town,Championship,United Kingdom,2,Ipswich,52.055,1.1452777777777778,30311,1884,,https://www.wikidata.org/wiki/Q619558
+girona,Estadi Montilivi,Girona,La Liga,Spain,1,Girona,41.961389,2.828611,13500,1970,,https://www.wikidata.org/wiki/Q2097709
+brest,Stade Francis-Le Blé,Brest,Ligue 1,France,1,Brest,48.40293,-4.46148,15097,1922,,https://www.wikidata.org/wiki/Q1432517
+toulouse,Stadium de Toulouse,Toulouse,Ligue 1,France,1,Toulouse,43.583296,1.434055,33150,1936,,https://www.wikidata.org/wiki/Q738044
+viking,SR-Bank Arena,Viking,Eliteserien,Norway,1,Stavanger,58.914611,5.730442,15400,2004,,https://www.wikidata.org/wiki/Q1417248
+aek-athens,OPAP Arena,AEK Athens,Super League Greece,Greece,1,Athens,38.03715,23.74154,34000,2017,,https://www.wikidata.org/wiki/Q15284032
+mjallby,Strandvallen,Mjällby,Allsvenskan,Sweden,1,Hällevik,56.0125,14.71666667,7500,1953,,https://www.wikidata.org/wiki/Q1848079
+udinese,Bluenergy Stadium,Udinese,Serie A,Italy,1,Udine,46.081603,13.200136,25312,1971,,https://www.wikidata.org/wiki/Q640031
+fluminense,Maracanã,Fluminense,Brasileirão,Brazil,1,Rio de Janeiro,-22.9098,-43.2339,,,,https://www.wikidata.org/wiki/Q10275958
+mallorca,Estadi Mallorca Son Moix,Mallorca,La Liga,Spain,1,Palma,39.59,2.63,23142,1999,,https://www.wikidata.org/wiki/Q276163
+river-plate,Estadio Monumental,River Plate,Argentine Primera División,Argentina,1,Buenos Aires,-34.54527777777778,-58.44972222222222,84567,,,https://www.wikidata.org/wiki/Q276354
+alaves,Mendizorrotza,Alavés,La Liga,Spain,1,Vitoria-Gasteiz,42.837111,-2.688044,19840,1924,,https://www.wikidata.org/wiki/Q1369390
+cruz-azul,Estadio Olímpico Universitario,Cruz Azul,Liga MX,Mexico,1,Mexico City,19.331928,-99.192106,83954,1952,,https://www.wikidata.org/wiki/Q767558

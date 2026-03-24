@@ -2,6 +2,8 @@
 
 Projektet er sat op til at kunne deployes som en statisk Expo Router-webapp på Vercel.
 
+Rådatafilen [data/opta_top100_stadiums.csv](/Users/martintoudal/Documents/StadiumWorld/stadium-world-app/data/opta_top100_stadiums.csv) ligger i repoet, så `npm run sync:data` også virker i Vercel-builds.
+
 ## Hurtigste vej
 
 1. Push [stadium-world-app](/Users/martintoudal/Documents/StadiumWorld/stadium-world-app) til GitHub.
