@@ -2,7 +2,20 @@
   "barcelona": {
     "statusNote": "Barcelona bruger i denne fase Estadi Olímpic Lluís Companys som midlertidig hjemmebane under Camp Nou-projektet.",
     "aliases": ["Montjuïc Olympic Stadium"],
-    "tags": ["temporary-home", "historic-venue"]
+    "tags": ["temporary-home", "historic-venue"],
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Estadi_Ol%C3%ADmpic_Llu%C3%ADs_Companys_2016.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Estadi_Ol%C3%ADmpic_Llu%C3%ADs_Companys_2016.jpg"
+  },
+  "arsenal": {
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Emirates_Stadium_west_view.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Emirates_Stadium_west_view.jpg"
+  },
+  "bayern-munchen": {
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Allianz_Arena_Munich,_Germany.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Allianz_Arena_Munich,_Germany.jpg"
   },
   "everton": {
     "statusNote": "Hill Dickinson Stadium markerer Evertons nye æra ved Bramley-Moore Dock.",
@@ -12,20 +25,37 @@
   "internazionale": {
     "statusNote": "Inter deler San Siro med Milan, hvilket gør den til en af de mest ikoniske delte hjemmebaner i Europa.",
     "aliases": ["Stadio Giuseppe Meazza"],
-    "tags": ["shared-stadium", "iconic"]
+    "tags": ["shared-stadium", "iconic"],
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Milan_san_siro_stadium.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Milan_san_siro_stadium.jpg"
   },
   "milan": {
     "statusNote": "Milan deler San Siro med Inter og er en del af stadionets særlige derby-identitet.",
     "aliases": ["Stadio Giuseppe Meazza"],
-    "tags": ["shared-stadium", "iconic"]
+    "tags": ["shared-stadium", "iconic"],
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Milan_san_siro_stadium.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Milan_san_siro_stadium.jpg"
   },
   "roma": {
     "statusNote": "Roma spiller på Stadio Olimpico, som deles med Lazio.",
-    "tags": ["shared-stadium", "capital-city"]
+    "tags": ["shared-stadium", "capital-city"],
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/ASRomaOlimpico.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:ASRomaOlimpico.jpg"
   },
   "lazio": {
     "statusNote": "Lazio spiller på Stadio Olimpico, som deles med Roma.",
-    "tags": ["shared-stadium", "capital-city"]
+    "tags": ["shared-stadium", "capital-city"],
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/ASRomaOlimpico.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:ASRomaOlimpico.jpg"
+  },
+  "real-madrid": {
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Estadio_Santiago_Bernab%C3%A9u.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Estadio_Santiago_Bernab%C3%A9u.jpg"
   },
   "seattle-sounders": {
     "statusNote": "Lumen Field er en stor multi-purpose arena, som giver Seattle en markant hjemmestemning i MLS.",

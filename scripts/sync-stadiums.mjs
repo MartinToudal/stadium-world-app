@@ -120,6 +120,9 @@ function main() {
         override.description ??
         `${row.team} spiller på ${row.name} i ${row.city}. Stadionet ligger i ${row.country} og konkurrerer i ${row.league}.`,
       statusNote: override.statusNote ?? null,
+      heroImageUrl: override.heroImageUrl ?? null,
+      heroImageCredit: override.heroImageCredit ?? null,
+      heroImagePage: override.heroImagePage ?? null,
       aliases: override.aliases ?? [],
       tags: [...new Set([...(override.tags ?? []), ...generatedTags])],
     };

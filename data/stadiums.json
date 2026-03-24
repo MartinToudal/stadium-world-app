@@ -21,6 +21,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Arsenal spiller på Emirates Stadium i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Emirates_Stadium_west_view.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Emirates_Stadium_west_view.jpg",
     "aliases": [],
     "tags": [
       "Premier League",
@@ -52,6 +55,9 @@
     "locationLabel": "Munich, Germany",
     "description": "Bayern München spiller på Allianz Arena i Munich. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Allianz_Arena_Munich,_Germany.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Allianz_Arena_Munich,_Germany.jpg",
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -83,6 +89,9 @@
     "locationLabel": "Barcelona, Spain",
     "description": "Barcelona spiller på Estadi Olímpic Lluís Companys i Barcelona. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": "Barcelona bruger i denne fase Estadi Olímpic Lluís Companys som midlertidig hjemmebane under Camp Nou-projektet.",
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Estadi_Ol%C3%ADmpic_Llu%C3%ADs_Companys_2016.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Estadi_Ol%C3%ADmpic_Llu%C3%ADs_Companys_2016.jpg",
     "aliases": [
       "Montjuïc Olympic Stadium"
     ],
@@ -118,6 +127,9 @@
     "locationLabel": "Madrid, Spain",
     "description": "Real Madrid spiller på Santiago Bernabéu i Madrid. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Estadio_Santiago_Bernab%C3%A9u.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Estadio_Santiago_Bernab%C3%A9u.jpg",
     "aliases": [],
     "tags": [
       "La Liga",
@@ -149,6 +161,9 @@
     "locationLabel": "Manchester, United Kingdom",
     "description": "Manchester City spiller på Etihad Stadium i Manchester. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -180,6 +195,9 @@
     "locationLabel": "Paris, France",
     "description": "Paris Saint-Germain spiller på Parc des Princes i Paris. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -211,6 +229,9 @@
     "locationLabel": "Liverpool, United Kingdom",
     "description": "Liverpool spiller på Anfield i Liverpool. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -242,6 +263,9 @@
     "locationLabel": "Birmingham, United Kingdom",
     "description": "Aston Villa spiller på Villa Park i Birmingham. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -273,6 +297,9 @@
     "locationLabel": "Manchester, United Kingdom",
     "description": "Manchester United spiller på Old Trafford i Manchester. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -304,6 +331,9 @@
     "locationLabel": "Milan, Italy",
     "description": "Internazionale spiller på San Siro i Milan. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": "Inter deler San Siro med Milan, hvilket gør den til en af de mest ikoniske delte hjemmebaner i Europa.",
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Milan_san_siro_stadium.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Milan_san_siro_stadium.jpg",
     "aliases": [
       "Stadio Giuseppe Meazza"
     ],
@@ -339,6 +369,9 @@
     "locationLabel": "Madrid, Spain",
     "description": "Atlético de Madrid spiller på Riyadh Air Metropolitano i Madrid. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -370,6 +403,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Chelsea spiller på Stamford Bridge i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -401,6 +437,9 @@
     "locationLabel": "Lisbon, Portugal",
     "description": "Sporting CP spiller på Estádio José Alvalade i Lisbon. Stadionet ligger i Portugal og konkurrerer i Primeira Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Primeira Liga",
@@ -432,6 +471,9 @@
     "locationLabel": "Brighton, United Kingdom",
     "description": "Brighton & Hove Albion spiller på Falmer Stadium i Brighton. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -463,6 +505,9 @@
     "locationLabel": "Newcastle upon Tyne, United Kingdom",
     "description": "Newcastle United spiller på St James' Park i Newcastle upon Tyne. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -494,6 +539,9 @@
     "locationLabel": "Dortmund, Germany",
     "description": "Borussia Dortmund spiller på Signal Iduna Park i Dortmund. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -525,6 +573,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Brentford spiller på Gtech Community Stadium i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -556,6 +607,9 @@
     "locationLabel": "Milan, Italy",
     "description": "Milan spiller på San Siro i Milan. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": "Milan deler San Siro med Inter og er en del af stadionets særlige derby-identitet.",
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Milan_san_siro_stadium.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:Milan_san_siro_stadium.jpg",
     "aliases": [
       "Stadio Giuseppe Meazza"
     ],
@@ -591,6 +645,9 @@
     "locationLabel": "Bournemouth, United Kingdom",
     "description": "AFC Bournemouth spiller på Vitality Stadium i Bournemouth. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -622,6 +679,9 @@
     "locationLabel": "Lisbon, Portugal",
     "description": "Benfica spiller på Estádio da Luz i Lisbon. Stadionet ligger i Portugal og konkurrerer i Primeira Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Primeira Liga",
@@ -653,6 +713,9 @@
     "locationLabel": "Porto, Portugal",
     "description": "Porto spiller på Estádio do Dragão i Porto. Stadionet ligger i Portugal og konkurrerer i Primeira Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Primeira Liga",
@@ -684,6 +747,9 @@
     "locationLabel": "Liverpool, United Kingdom",
     "description": "Everton spiller på Hill Dickinson Stadium i Liverpool. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": "Hill Dickinson Stadium markerer Evertons nye æra ved Bramley-Moore Dock.",
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [
       "Everton Stadium",
       "Bramley-Moore Dock Stadium"
@@ -720,6 +786,9 @@
     "locationLabel": "Naples, Italy",
     "description": "Napoli spiller på Stadio Diego Armando Maradona i Naples. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -751,6 +820,9 @@
     "locationLabel": "Leverkusen, Germany",
     "description": "Bayer Leverkusen spiller på BayArena i Leverkusen. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -782,6 +854,9 @@
     "locationLabel": "Turin, Italy",
     "description": "Juventus spiller på Allianz Stadium i Turin. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -813,6 +888,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Fulham spiller på Craven Cottage i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -844,6 +922,9 @@
     "locationLabel": "Bergamo, Italy",
     "description": "Atalanta spiller på Gewiss Stadium i Bergamo. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -875,6 +956,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Crystal Palace spiller på Selhurst Park i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -906,6 +990,9 @@
     "locationLabel": "Como, Italy",
     "description": "Como spiller på Stadio Giuseppe Sinigaglia i Como. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -937,6 +1024,9 @@
     "locationLabel": "Rome, Italy",
     "description": "Roma spiller på Stadio Olimpico i Rome. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": "Roma spiller på Stadio Olimpico, som deles med Lazio.",
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/ASRomaOlimpico.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:ASRomaOlimpico.jpg",
     "aliases": [],
     "tags": [
       "shared-stadium",
@@ -970,6 +1060,9 @@
     "locationLabel": "Brussels, Belgium",
     "description": "Union Saint-Gilloise spiller på Stade Joseph Marien i Brussels. Stadionet ligger i Belgium og konkurrerer i Belgian Pro League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Belgian Pro League",
@@ -1001,6 +1094,9 @@
     "locationLabel": "Nottingham, United Kingdom",
     "description": "Nottingham Forest spiller på City Ground i Nottingham. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -1032,6 +1128,9 @@
     "locationLabel": "Bodø, Norway",
     "description": "Bodø / Glimt spiller på Aspmyra Stadion i Bodø. Stadionet ligger i Norway og konkurrerer i Eliteserien.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Eliteserien",
@@ -1063,6 +1162,9 @@
     "locationLabel": "Bruges, Belgium",
     "description": "Club Brugge spiller på Jan Breydel Stadium i Bruges. Stadionet ligger i Belgium og konkurrerer i Belgian Pro League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Belgian Pro League",
@@ -1094,6 +1196,9 @@
     "locationLabel": "Istanbul, Turkey",
     "description": "Galatasaray spiller på RAMS Park i Istanbul. Stadionet ligger i Turkey og konkurrerer i Super Lig.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Super Lig",
@@ -1125,6 +1230,9 @@
     "locationLabel": "Villarreal, Spain",
     "description": "Villarreal spiller på Estadio de la Cerámica i Villarreal. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -1156,6 +1264,9 @@
     "locationLabel": "Lens, France",
     "description": "Lens spiller på Stade Bollaert-Delelis i Lens. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1187,6 +1298,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "Tottenham Hotspur spiller på Tottenham Hotspur Stadium i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -1218,6 +1332,9 @@
     "locationLabel": "Stuttgart, Germany",
     "description": "Stuttgart spiller på MHPArena i Stuttgart. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -1249,6 +1366,9 @@
     "locationLabel": "Leipzig, Germany",
     "description": "RB Leipzig spiller på Red Bull Arena i Leipzig. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -1280,6 +1400,9 @@
     "locationLabel": "Eindhoven, Netherlands",
     "description": "PSV spiller på Philips Stadion i Eindhoven. Stadionet ligger i Netherlands og konkurrerer i Eredivisie.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Eredivisie",
@@ -1311,6 +1434,9 @@
     "locationLabel": "Monaco, Monaco",
     "description": "Monaco spiller på Stade Louis II i Monaco. Stadionet ligger i Monaco og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1342,6 +1468,9 @@
     "locationLabel": "Leeds, United Kingdom",
     "description": "Leeds United spiller på Elland Road i Leeds. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -1373,6 +1502,9 @@
     "locationLabel": "Vigo, Spain",
     "description": "Celta de Vigo spiller på Abanca Balaídos i Vigo. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -1404,6 +1536,9 @@
     "locationLabel": "Seville, Spain",
     "description": "Real Betis spiller på Estadio Benito Villamarín i Seville. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -1435,6 +1570,9 @@
     "locationLabel": "Sunderland, United Kingdom",
     "description": "Sunderland spiller på Stadium of Light i Sunderland. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -1466,6 +1604,9 @@
     "locationLabel": "Marseille, France",
     "description": "Olympique Marseille spiller på Stade Vélodrome i Marseille. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1497,6 +1638,9 @@
     "locationLabel": "Décines-Charpieu, France",
     "description": "Olympique Lyonnais spiller på Groupama Stadium i Décines-Charpieu. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1528,6 +1672,9 @@
     "locationLabel": "London, United Kingdom",
     "description": "West Ham United spiller på London Stadium i London. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -1559,6 +1706,9 @@
     "locationLabel": "Rome, Italy",
     "description": "Lazio spiller på Stadio Olimpico i Rome. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": "Lazio spiller på Stadio Olimpico, som deles med Roma.",
+    "heroImageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/ASRomaOlimpico.jpg",
+    "heroImageCredit": "Wikimedia Commons",
+    "heroImagePage": "https://commons.wikimedia.org/wiki/File:ASRomaOlimpico.jpg",
     "aliases": [],
     "tags": [
       "shared-stadium",
@@ -1592,6 +1742,9 @@
     "locationLabel": "Rio de Janeiro, Brazil",
     "description": "Flamengo spiller på Maracanã i Rio de Janeiro. Stadionet ligger i Brazil og konkurrerer i Brasileirão.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Brasileirão",
@@ -1623,6 +1776,9 @@
     "locationLabel": "Strasbourg, France",
     "description": "Strasbourg spiller på Stade de la Meinau i Strasbourg. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1654,6 +1810,9 @@
     "locationLabel": "San Sebastián, Spain",
     "description": "Real Sociedad spiller på Reale Arena i San Sebastián. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -1685,6 +1844,9 @@
     "locationLabel": "Sinsheim, Germany",
     "description": "Hoffenheim spiller på PreZero Arena i Sinsheim. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -1716,6 +1878,9 @@
     "locationLabel": "Herning, Denmark",
     "description": "Midtjylland spiller på MCH Arena i Herning. Stadionet ligger i Denmark og konkurrerer i Superliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Superliga",
@@ -1747,6 +1912,9 @@
     "locationLabel": "Piraeus, Greece",
     "description": "Olympiakos Piraeus spiller på Karaiskakis Stadium i Piraeus. Stadionet ligger i Greece og konkurrerer i Super League Greece.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Super League Greece",
@@ -1778,6 +1946,9 @@
     "locationLabel": "Villeneuve-d'Ascq, France",
     "description": "Lille spiller på Stade Pierre-Mauroy i Villeneuve-d'Ascq. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -1809,6 +1980,9 @@
     "locationLabel": "Istanbul, Turkey",
     "description": "Fenerbahçe spiller på Şükrü Saracoğlu Stadium i Istanbul. Stadionet ligger i Turkey og konkurrerer i Super Lig.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Super Lig",
@@ -1840,6 +2014,9 @@
     "locationLabel": "Bilbao, Spain",
     "description": "Athletic Club spiller på San Mamés i Bilbao. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -1871,6 +2048,9 @@
     "locationLabel": "Braga, Portugal",
     "description": "Sporting Braga spiller på Estádio Municipal de Braga i Braga. Stadionet ligger i Portugal og konkurrerer i Primeira Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Primeira Liga",
@@ -1902,6 +2082,9 @@
     "locationLabel": "Prague, Czech Republic",
     "description": "Slavia Praha spiller på Fortuna Arena i Prague. Stadionet ligger i Czech Republic og konkurrerer i Czech First League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Czech First League",
@@ -1933,6 +2116,9 @@
     "locationLabel": "São Paulo, Brazil",
     "description": "Palmeiras spiller på Allianz Parque i São Paulo. Stadionet ligger i Brazil og konkurrerer i Brasileirão.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Brasileirão",
@@ -1964,6 +2150,9 @@
     "locationLabel": "Bologna, Italy",
     "description": "Bologna spiller på Stadio Renato Dall'Ara i Bologna. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -1995,6 +2184,9 @@
     "locationLabel": "Zagreb, Croatia",
     "description": "Dinamo Zagreb spiller på Stadion Maksimir i Zagreb. Stadionet ligger i Croatia og konkurrerer i HNL.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "HNL",
@@ -2026,6 +2218,9 @@
     "locationLabel": "Riyadh, Saudi Arabia",
     "description": "Al Hilal spiller på Kingdom Arena i Riyadh. Stadionet ligger i Saudi Arabia og konkurrerer i Saudi Pro League.",
     "statusNote": "Kingdom Arena er et nyt og centralt stadionprojekt i Riyadhs moderne sportslandskab.",
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "new-era",
@@ -2059,6 +2254,9 @@
     "locationLabel": "Pamplona, Spain",
     "description": "Osasuna spiller på El Sadar i Pamplona. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -2090,6 +2288,9 @@
     "locationLabel": "Rennes, France",
     "description": "Rennes spiller på Roazhon Park i Rennes. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -2121,6 +2322,9 @@
     "locationLabel": "Wolverhampton, United Kingdom",
     "description": "Wolverhampton Wanderers spiller på Molineux Stadium i Wolverhampton. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -2152,6 +2356,9 @@
     "locationLabel": "Freiburg im Breisgau, Germany",
     "description": "Freiburg spiller på Europa-Park Stadion i Freiburg im Breisgau. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -2183,6 +2390,9 @@
     "locationLabel": "Valencia, Spain",
     "description": "Valencia spiller på Mestalla i Valencia. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -2214,6 +2424,9 @@
     "locationLabel": "Frankfurt, Germany",
     "description": "Eintracht Frankfurt spiller på Deutsche Bank Park i Frankfurt. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -2245,6 +2458,9 @@
     "locationLabel": "Coventry, United Kingdom",
     "description": "Coventry City spiller på Coventry Building Society Arena i Coventry. Stadionet ligger i United Kingdom og konkurrerer i Championship.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Championship",
@@ -2276,6 +2492,9 @@
     "locationLabel": "Mainz, Germany",
     "description": "Mainz 05 spiller på MEWA Arena i Mainz. Stadionet ligger i Germany og konkurrerer i Bundesliga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Bundesliga",
@@ -2307,6 +2526,9 @@
     "locationLabel": "Riyadh, Saudi Arabia",
     "description": "Al Nassr spiller på Al-Awwal Park i Riyadh. Stadionet ligger i Saudi Arabia og konkurrerer i Saudi Pro League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Saudi Pro League",
@@ -2338,6 +2560,9 @@
     "locationLabel": "Avellaneda, Argentina",
     "description": "Racing Club spiller på Estadio Presidente Perón i Avellaneda. Stadionet ligger i Argentina og konkurrerer i Argentine Primera División.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Argentine Primera División",
@@ -2369,6 +2594,9 @@
     "locationLabel": "Seattle, United States",
     "description": "Seattle Sounders spiller på Lumen Field i Seattle. Stadionet ligger i United States og konkurrerer i MLS.",
     "statusNote": "Lumen Field er en stor multi-purpose arena, som giver Seattle en markant hjemmestemning i MLS.",
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "multi-purpose",
@@ -2402,6 +2630,9 @@
     "locationLabel": "Getafe, Spain",
     "description": "Getafe spiller på Coliseum i Getafe. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -2433,6 +2664,9 @@
     "locationLabel": "Madrid, Spain",
     "description": "Rayo Vallecano spiller på Campo de Fútbol de Vallecas i Madrid. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -2464,6 +2698,9 @@
     "locationLabel": "Saint Petersburg, Russia",
     "description": "Zenit spiller på Gazprom Arena i Saint Petersburg. Stadionet ligger i Russia og konkurrerer i Russian Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Russian Premier League",
@@ -2495,6 +2732,9 @@
     "locationLabel": "Fort Lauderdale, United States",
     "description": "Inter Miami spiller på Chase Stadium i Fort Lauderdale. Stadionet ligger i United States og konkurrerer i MLS.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "MLS",
@@ -2526,6 +2766,9 @@
     "locationLabel": "Los Angeles, United States",
     "description": "Los Angeles spiller på BMO Stadium i Los Angeles. Stadionet ligger i United States og konkurrerer i MLS.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "MLS",
@@ -2557,6 +2800,9 @@
     "locationLabel": "Buenos Aires, Argentina",
     "description": "Boca Juniors spiller på La Bombonera i Buenos Aires. Stadionet ligger i Argentina og konkurrerer i Argentine Primera División.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Argentine Primera División",
@@ -2588,6 +2834,9 @@
     "locationLabel": "Florence, Italy",
     "description": "Fiorentina spiller på Stadio Artemio Franchi i Florence. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -2619,6 +2868,9 @@
     "locationLabel": "Toluca, Mexico",
     "description": "Toluca spiller på Estadio Nemesio Díez i Toluca. Stadionet ligger i Mexico og konkurrerer i Liga MX.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Liga MX",
@@ -2650,6 +2902,9 @@
     "locationLabel": "Burnley, United Kingdom",
     "description": "Burnley spiller på Turf Moor i Burnley. Stadionet ligger i United Kingdom og konkurrerer i Premier League.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Premier League",
@@ -2681,6 +2936,9 @@
     "locationLabel": "Belgrade, Serbia",
     "description": "Crvena zvezda spiller på Rajko Mitić Stadium i Belgrade. Stadionet ligger i Serbia og konkurrerer i Serbian SuperLiga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serbian SuperLiga",
@@ -2712,6 +2970,9 @@
     "locationLabel": "Thessaloniki, Greece",
     "description": "PAOK spiller på Toumba Stadium i Thessaloniki. Stadionet ligger i Greece og konkurrerer i Super League Greece.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Super League Greece",
@@ -2743,6 +3004,9 @@
     "locationLabel": "Ipswich, United Kingdom",
     "description": "Ipswich Town spiller på Portman Road i Ipswich. Stadionet ligger i United Kingdom og konkurrerer i Championship.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Championship",
@@ -2774,6 +3038,9 @@
     "locationLabel": "Girona, Spain",
     "description": "Girona spiller på Estadi Montilivi i Girona. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -2805,6 +3072,9 @@
     "locationLabel": "Brest, France",
     "description": "Brest spiller på Stade Francis-Le Blé i Brest. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -2836,6 +3106,9 @@
     "locationLabel": "Toulouse, France",
     "description": "Toulouse spiller på Stadium de Toulouse i Toulouse. Stadionet ligger i France og konkurrerer i Ligue 1.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Ligue 1",
@@ -2867,6 +3140,9 @@
     "locationLabel": "Stavanger, Norway",
     "description": "Viking spiller på SR-Bank Arena i Stavanger. Stadionet ligger i Norway og konkurrerer i Eliteserien.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Eliteserien",
@@ -2898,6 +3174,9 @@
     "locationLabel": "Athens, Greece",
     "description": "AEK Athens spiller på OPAP Arena i Athens. Stadionet ligger i Greece og konkurrerer i Super League Greece.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Super League Greece",
@@ -2929,6 +3208,9 @@
     "locationLabel": "Hällevik, Sweden",
     "description": "Mjällby spiller på Strandvallen i Hällevik. Stadionet ligger i Sweden og konkurrerer i Allsvenskan.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Allsvenskan",
@@ -2960,6 +3242,9 @@
     "locationLabel": "Udine, Italy",
     "description": "Udinese spiller på Bluenergy Stadium i Udine. Stadionet ligger i Italy og konkurrerer i Serie A.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Serie A",
@@ -2991,6 +3276,9 @@
     "locationLabel": "Rio de Janeiro, Brazil",
     "description": "Fluminense spiller på Maracanã i Rio de Janeiro. Stadionet ligger i Brazil og konkurrerer i Brasileirão.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Brasileirão",
@@ -3022,6 +3310,9 @@
     "locationLabel": "Palma, Spain",
     "description": "Mallorca spiller på Estadi Mallorca Son Moix i Palma. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -3053,6 +3344,9 @@
     "locationLabel": "Buenos Aires, Argentina",
     "description": "River Plate spiller på Estadio Monumental i Buenos Aires. Stadionet ligger i Argentina og konkurrerer i Argentine Primera División.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Argentine Primera División",
@@ -3084,6 +3378,9 @@
     "locationLabel": "Vitoria-Gasteiz, Spain",
     "description": "Alavés spiller på Mendizorrotza i Vitoria-Gasteiz. Stadionet ligger i Spain og konkurrerer i La Liga.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "La Liga",
@@ -3115,6 +3412,9 @@
     "locationLabel": "Mexico City, Mexico",
     "description": "Cruz Azul spiller på Estadio Olímpico Universitario i Mexico City. Stadionet ligger i Mexico og konkurrerer i Liga MX.",
     "statusNote": null,
+    "heroImageUrl": null,
+    "heroImageCredit": null,
+    "heroImagePage": null,
     "aliases": [],
     "tags": [
       "Liga MX",
