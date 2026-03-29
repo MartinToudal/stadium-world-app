@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { colors, spacing } from "../constants/theme";
 import { Stadium } from "../lib/stadiums";
@@ -11,13 +11,13 @@ type StadiumMapProps = {
 
 const MAP_HEIGHT = 420;
 
-function toMapPoint(latitude: number, longitude: number) {
+function toMapPoint(latitude: number, longitude: number): Pick<ViewStyle, "left" | "top"> {
   const left = ((longitude + 180) / 360) * 100;
   const top = ((90 - latitude) / 180) * 100;
 
   return {
-    left: `${Math.min(98, Math.max(2, left))}%`,
-    top: `${Math.min(96, Math.max(4, top))}%`,
+    left: `${Math.min(98, Math.max(2, left))}%` as `${number}%`,
+    top: `${Math.min(96, Math.max(4, top))}%` as `${number}%`,
   };
 }
 
