@@ -22,11 +22,6 @@ export type Stadium = {
   locationLabel: string;
   description: string;
   statusNote: string | null;
-  heroImageUrl: string | null;
-  heroImageAuthor: string | null;
-  heroImageLicense: string | null;
-  heroImageLicenseUrl: string | null;
-  heroImagePage: string | null;
   aliases: string[];
   tags: string[];
 };

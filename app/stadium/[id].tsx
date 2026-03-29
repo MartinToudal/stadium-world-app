@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { FavoriteButton } from "../../components/favorite-button";
@@ -31,10 +31,6 @@ export default function StadiumDetailScreen() {
       <Stack.Screen options={{ title: stadium.team }} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.heroCard}>
-          {stadium.heroImageUrl ? (
-            <Image resizeMode="cover" source={{ uri: stadium.heroImageUrl }} style={styles.heroImage} />
-          ) : null}
-          <View style={[styles.heroImageOverlay, stadium.heroImageUrl ? styles.heroImageOverlayVisible : null]} />
           <View style={styles.heroTopRow}>
             <View style={styles.heroTopText}>
               <Text style={styles.heroEyebrow}>{stadium.country}</Text>
@@ -48,14 +44,6 @@ export default function StadiumDetailScreen() {
             </View>
             <FavoriteButton active={isFavorite(stadium.id)} onPress={() => toggleFavorite(stadium.id)} />
           </View>
-          {stadium.heroImageAuthor || stadium.heroImageLicense ? (
-            <View style={styles.heroCreditWrap}>
-              {stadium.heroImageAuthor ? <Text style={styles.heroCreditText}>Foto: {stadium.heroImageAuthor}</Text> : null}
-              {stadium.heroImageLicense ? (
-                <Text style={styles.heroCreditText}>Licens: {stadium.heroImageLicense}</Text>
-              ) : null}
-            </View>
-          ) : null}
         </View>
 
         <View style={styles.grid}>
@@ -128,16 +116,6 @@ export default function StadiumDetailScreen() {
           {stadium.source ? (
             <ActionButton label="Åbn kilde" onPress={() => Linking.openURL(stadium.source!)} secondary />
           ) : null}
-          {stadium.heroImagePage ? (
-            <ActionButton label="Fotokilde" onPress={() => Linking.openURL(stadium.heroImagePage!)} secondary />
-          ) : null}
-          {stadium.heroImageLicenseUrl ? (
-            <ActionButton
-              label="Fotolicens"
-              onPress={() => Linking.openURL(stadium.heroImageLicenseUrl!)}
-              secondary
-            />
-          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -192,26 +170,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.ink,
     borderRadius: 28,
     gap: spacing.sm,
-    overflow: "hidden",
     padding: spacing.lg,
-  },
-  heroImage: {
-    ...StyleSheet.absoluteFillObject,
-    height: "100%",
-    width: "100%",
-  },
-  heroImageOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "transparent",
-  },
-  heroImageOverlayVisible: {
-    backgroundColor: "rgba(24,22,31,0.38)",
   },
   heroTopRow: {
     flexDirection: "row",
     gap: spacing.md,
     justifyContent: "space-between",
-    zIndex: 1,
   },
   heroTopText: {
     flex: 1,
@@ -238,20 +202,6 @@ const styles = StyleSheet.create({
   heroMeta: {
     color: "#D2C7BA",
     fontSize: 14,
-  },
-  heroCreditWrap: {
-    alignSelf: "flex-start",
-    backgroundColor: "rgba(255,255,255,0.12)",
-    borderRadius: 999,
-    marginTop: spacing.sm,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    zIndex: 1,
-  },
-  heroCreditText: {
-    color: "#F4E9DC",
-    fontSize: 12,
-    fontWeight: "700",
   },
   grid: {
     flexDirection: "row",
