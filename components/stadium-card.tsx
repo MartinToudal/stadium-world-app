@@ -12,10 +12,11 @@ type StadiumCardProps = {
 };
 
 export function StadiumCard({ stadium }: StadiumCardProps) {
-  const { isFavorite, isVisited, isWishlisted, toggleFavorite, toggleVisited, toggleWishlist } = useStadiumCollections();
+  const { isFavorite, isVisited, isWishlisted, getVisitedDate, toggleFavorite, toggleVisited, toggleWishlist } = useStadiumCollections();
   const favorite = isFavorite(stadium.id);
   const visited = isVisited(stadium.id);
   const wishlisted = isWishlisted(stadium.id);
+  const visitedDate = getVisitedDate(stadium.id);
 
   return (
     <Pressable
@@ -49,7 +50,9 @@ export function StadiumCard({ stadium }: StadiumCardProps) {
             <View style={styles.statusRow}>
               {visited ? (
                 <View style={[styles.statusPill, styles.statusVisited]}>
-                  <Text style={[styles.statusPillText, styles.statusVisitedText]}>Besøgt</Text>
+                  <Text style={[styles.statusPillText, styles.statusVisitedText]}>
+                    {visitedDate ? `Besøgt ${visitedDate}` : "Besøgt"}
+                  </Text>
                 </View>
               ) : null}
               {wishlisted ? (

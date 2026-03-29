@@ -4,22 +4,30 @@ import { createContext, ReactNode, useContext, useEffect, useMemo, useState } fr
 const LEGACY_FAVORITES_KEY = "stadium-world:favorites";
 const STORAGE_KEY = "stadium-world:collections";
 
+export type VisitedEntry = {
+  stadiumId: string;
+  visitedOn: string | null;
+};
+
 type StadiumCollections = {
   favorites: string[];
-  visited: string[];
+  visited: VisitedEntry[];
   wishlist: string[];
 };
 
 type FavoritesContextValue = {
   favorites: string[];
-  visited: string[];
+  visited: VisitedEntry[];
   wishlist: string[];
   isFavorite: (id: string) => boolean;
   isVisited: (id: string) => boolean;
   isWishlisted: (id: string) => boolean;
+  getVisitedDate: (id: string) => string | null;
   loading: boolean;
   toggleFavorite: (id: string) => void;
   toggleVisited: (id: string) => void;
+  setVisitedDate: (id: string, visitedOn: string | null) => void;
+  clearVisited: (id: string) => void;
   toggleWishlist: (id: string) => void;
 };
 
@@ -33,6 +41,37 @@ function normalizeIds(value: unknown) {
   return [...new Set(value.filter((item): item is string => typeof item === "string"))];
 }
 
+function normalizeVisited(value: unknown): VisitedEntry[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const deduped = new Map<string, VisitedEntry>();
+
+  for (const item of value) {
+    if (typeof item === "string") {
+      deduped.set(item, { stadiumId: item, visitedOn: null });
+      continue;
+    }
+
+    if (!item || typeof item !== "object") {
+      continue;
+    }
+
+    const candidate = item as Partial<VisitedEntry>;
+    if (typeof candidate.stadiumId !== "string") {
+      continue;
+    }
+
+    deduped.set(candidate.stadiumId, {
+      stadiumId: candidate.stadiumId,
+      visitedOn: typeof candidate.visitedOn === "string" ? candidate.visitedOn : null,
+    });
+  }
+
+  return [...deduped.values()];
+}
+
 function normalizeCollections(value: unknown): StadiumCollections {
   if (!value || typeof value !== "object") {
     return { favorites: [], visited: [], wishlist: [] };
@@ -42,7 +81,7 @@ function normalizeCollections(value: unknown): StadiumCollections {
 
   return {
     favorites: normalizeIds(collections.favorites),
-    visited: normalizeIds(collections.visited),
+    visited: normalizeVisited(collections.visited),
     wishlist: normalizeIds(collections.wishlist),
   };
 }
@@ -96,13 +135,42 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  function updateCollection(key: keyof StadiumCollections, id: string) {
+  function updateIdCollection(key: "favorites" | "wishlist", id: string) {
     setCollections((current) => {
       const currentValues = current[key];
       const nextValues = currentValues.includes(id)
         ? currentValues.filter((item) => item !== id)
         : [...currentValues, id];
       const next = { ...current, [key]: nextValues };
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => undefined);
+      return next;
+    });
+  }
+
+  function getTodayString() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function setVisitedDate(stadiumId: string, visitedOn: string | null) {
+    setCollections((current) => {
+      const existing = current.visited.find((item) => item.stadiumId === stadiumId);
+      const nextVisited = existing
+        ? current.visited.map((item) =>
+            item.stadiumId === stadiumId ? { ...item, visitedOn } : item
+          )
+        : [...current.visited, { stadiumId, visitedOn }];
+      const next = { ...current, visited: nextVisited };
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => undefined);
+      return next;
+    });
+  }
+
+  function clearVisited(stadiumId: string) {
+    setCollections((current) => {
+      const next = {
+        ...current,
+        visited: current.visited.filter((item) => item.stadiumId !== stadiumId),
+      };
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next)).catch(() => undefined);
       return next;
     });
@@ -115,11 +183,22 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       wishlist: collections.wishlist,
       loading,
       isFavorite: (id: string) => collections.favorites.includes(id),
-      isVisited: (id: string) => collections.visited.includes(id),
+      isVisited: (id: string) => collections.visited.some((item) => item.stadiumId === id),
       isWishlisted: (id: string) => collections.wishlist.includes(id),
-      toggleFavorite: (id: string) => updateCollection("favorites", id),
-      toggleVisited: (id: string) => updateCollection("visited", id),
-      toggleWishlist: (id: string) => updateCollection("wishlist", id),
+      getVisitedDate: (id: string) =>
+        collections.visited.find((item) => item.stadiumId === id)?.visitedOn ?? null,
+      toggleFavorite: (id: string) => updateIdCollection("favorites", id),
+      toggleVisited: (id: string) => {
+        const existing = collections.visited.find((item) => item.stadiumId === id);
+        if (existing) {
+          clearVisited(id);
+          return;
+        }
+        setVisitedDate(id, getTodayString());
+      },
+      setVisitedDate,
+      clearVisited,
+      toggleWishlist: (id: string) => updateIdCollection("wishlist", id),
     }),
     [collections, loading]
   );

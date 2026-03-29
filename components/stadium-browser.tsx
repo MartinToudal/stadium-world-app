@@ -57,7 +57,7 @@ export function StadiumBrowser({
           case "favorites":
             return favorites.includes(stadium.id);
           case "visited":
-            return visited.includes(stadium.id);
+            return visited.some((entry) => entry.stadiumId === stadium.id);
           case "wishlist":
             return wishlist.includes(stadium.id);
           default:

@@ -4,17 +4,13 @@ Et levende overblik over næste skridt i produktet efter første live-deploy.
 
 ## Now
 
-### 1. Community gallery
-- Lad billeder blive uploadet af brugerne i stedet for af os.
-- Byg først den rigtige model:
-- moderation og rapportering
-- tydelige upload-regler og samtykke
-- attribution og rettighedserklæring fra uploaderen
-- Mål: gøre billedlaget community-bygget uden at vi selv bærer copyright-risikoen ved at kuratere andres billeder.
-Status:
-- policy og typed groundwork findes nu i repoet
-- stadium pages viser et community gallery-panel som placeholder
-- næste konkrete skridt er et rigtigt pending-submission flow
+### 1. Visit history
+- Gør `besøgt` til en rigtig historik med dato, ikke kun en markering.
+- Brug det til at vise:
+- seneste besøg
+- besøg pr. år
+- stærkeste lande og ligaer i historikken
+- Mål: gøre appen nyttig som personligt stadionoverblik før vi bygger mere community eller content.
 
 ### 2. Trip itinerary
 - Udvid `visited` og `wishlist` til en rigtig rejseplan:
@@ -28,6 +24,7 @@ Status:
 - “næste stadion at tage til”
 - “stærkeste liga på wishlist”
 - “flest besøg i samme land”
+- “seneste besøg med dato”
 - Mål: få appen til at føles mere personlig og mindre som en filtreret liste.
 
 ## Next
@@ -54,11 +51,15 @@ Status:
 
 ## Later
 
-### 7. Accounts and sync
+### 7. Community gallery
+- Når visit history sidder rigtigt, kan vi vende tilbage til et community-bygget galleri.
+- Start først når vi har moderation, upload-regler og rettighedserklæring på plads.
+
+### 8. Accounts and sync
 - Undersøg om lokale samlinger senere skal synkroniseres mellem devices.
 - Mål: bevare enkelheden nu, men holde døren åben for login eller cloud-sync senere.
 
-### 8. Native iOS readiness
+### 9. Native iOS readiness
 - Når webflowet er stærkt nok, kan vi prioritere native iOS-fordele:
 - bedre map-oplevelse
 - deling fra mobilen
@@ -67,6 +68,6 @@ Status:
 
 ## Current recommendation
 
-Hvis jeg selv vælger næste step, vil jeg tage **community gallery groundwork** først.
+Hvis jeg selv vælger næste step, vil jeg tage **visit history og datoer** først.
 
-Det betyder ikke billeder med det samme. Det betyder at vi først designer den rigtige model for brugeruploads, moderation og rettigheder, så vi ikke bygger noget, vi senere skal trække tilbage af juridiske grunde.
+Det er den hurtigste vej til et produkt, der faktisk er nyttigt: et klart overblik over, hvilke stadioner man har besøgt, hvornår man gjorde det, og hvor ens stadionhistorik er stærkest.

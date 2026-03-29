@@ -4,8 +4,8 @@ export default function SavedScreen() {
   return (
     <StadiumBrowser
       defaultCollectionFilter="all"
-      heroTitle="Byg din egen stadiontracker med favoritter, besøg og wishlist."
-      heroText="Din personlige stadionhistorik ligger lokalt på enheden og kan senere deles direkte med en rigtig iOS-app med samme state-lag."
+      heroTitle="Byg din egen stadionhistorik med besøg, datoer og fremtidige mål."
+      heroText="Det vigtigste lige nu er overblik: hvilke stadioner du har været på, hvornår du var der, og hvilke der stadig står på listen."
       panelTitle="Dine samlinger"
       showCollectionFilters
       showTripPlanner

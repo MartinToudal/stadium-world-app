@@ -33,16 +33,31 @@ function getWishlistClusters(items: Stadium[]) {
     .entries();
 }
 
+function getLatestVisit(entries: { stadiumId: string; visitedOn: string | null }[]) {
+  return [...entries]
+    .filter((entry) => entry.visitedOn)
+    .sort((a, b) => (b.visitedOn ?? "").localeCompare(a.visitedOn ?? ""))[0] ?? null;
+}
+
+function getVisitsThisYear(entries: { visitedOn: string | null }[]) {
+  const currentYear = String(new Date().getFullYear());
+  return entries.filter((entry) => entry.visitedOn?.startsWith(currentYear)).length;
+}
+
 export function TripPlannerPanel() {
   const { favorites, visited, wishlist } = useStadiumCollections();
 
-  const visitedStadiums = stadiums.filter((stadium) => visited.includes(stadium.id));
+  const visitedStadiums = stadiums.filter((stadium) => visited.some((entry) => entry.stadiumId === stadium.id));
   const wishlistStadiums = stadiums.filter((stadium) => wishlist.includes(stadium.id));
   const favoriteStadiums = stadiums.filter((stadium) => favorites.includes(stadium.id));
 
   const coverage = stadiums.length ? Math.round((visitedStadiums.length / stadiums.length) * 100) : 0;
   const topWishlistRegion = getTopGroup(wishlistStadiums, "region");
   const topVisitedCountry = getTopGroup(visitedStadiums, "country");
+  const latestVisit = getLatestVisit(visited);
+  const latestVisitedStadium =
+    stadiums.find((stadium) => stadium.id === latestVisit?.stadiumId) ?? null;
+  const visitsThisYear = getVisitsThisYear(visited);
   const wishlistClusters = [...getWishlistClusters(wishlistStadiums)]
     .sort((a, b) => b[1].length - a[1].length)
     .slice(0, 3);
@@ -51,10 +66,10 @@ export function TripPlannerPanel() {
     <View style={styles.panel}>
       <View style={styles.header}>
         <View style={styles.headerText}>
-          <Text style={styles.eyebrow}>Trip Planner</Text>
-          <Text style={styles.title}>Gør dine gemte stadioner til en konkret rejseplan.</Text>
+          <Text style={styles.eyebrow}>Visit Tracker</Text>
+          <Text style={styles.title}>Byg en rigtig historik over stadioner, du har været på.</Text>
           <Text style={styles.text}>
-            Brug oversigten her til at se, hvor du allerede har momentum, og hvor næste stadiontur giver mest mening.
+            Fokus er nu på overblik: hvad du har besøgt, hvornår du gjorde det, og hvor du allerede har stærke spor.
           </Text>
         </View>
         <View style={styles.progressCard}>
@@ -65,12 +80,30 @@ export function TripPlannerPanel() {
 
       <View style={styles.statsRow}>
         <InsightCard
+          label="Besøg i år"
+          value={String(visitsThisYear)}
+          helper="Viser hvor mange besøg der har en dato i indeværende år"
+        />
+        <InsightCard
           label="Næste fokusregion"
           value={topWishlistRegion?.[0] ?? "Vælg et wishlist-mål"}
           helper={
             topWishlistRegion
               ? `${pluralize(topWishlistRegion[1], "stadion", "stadioner")} ligger allerede klar her`
               : "Begynd med at lægge stadioner i wishlist"
+          }
+        />
+        <InsightCard
+          label="Seneste besøg"
+          value={
+            latestVisitedStadium && latestVisit?.visitedOn
+              ? `${latestVisitedStadium.team}`
+              : "Ingen dato endnu"
+          }
+          helper={
+            latestVisitedStadium && latestVisit?.visitedOn
+              ? `${latestVisit.visitedOn} · ${latestVisitedStadium.stadiumName}`
+              : "Markér et stadion som besøgt med dato for at starte historikken"
           }
         />
         <InsightCard

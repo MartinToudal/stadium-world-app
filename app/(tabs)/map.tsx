@@ -38,7 +38,7 @@ export default function MapScreen() {
             case "favorites":
               return favorites.includes(stadium.id);
             case "visited":
-              return visited.includes(stadium.id);
+              return visited.some((entry) => entry.stadiumId === stadium.id);
             case "wishlist":
               return wishlist.includes(stadium.id);
             default:
@@ -406,6 +406,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   selectedActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  selectedStatusRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,

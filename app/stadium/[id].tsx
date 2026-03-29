@@ -1,9 +1,9 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
 
-import { CommunityGalleryPanel } from "../../components/community-gallery-panel";
 import { FavoriteButton } from "../../components/favorite-button";
 import { StadiumStatusButton } from "../../components/stadium-status-button";
 import { colors, spacing } from "../../constants/theme";
@@ -13,7 +13,17 @@ import { findStadiumById, formatCapacity, stadiumMapUrl } from "../../lib/stadiu
 export default function StadiumDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const stadium = findStadiumById(id);
-  const { isFavorite, isVisited, isWishlisted, toggleFavorite, toggleVisited, toggleWishlist } = useStadiumCollections();
+  const { isFavorite, isVisited, isWishlisted, getVisitedDate, toggleFavorite, toggleVisited, toggleWishlist, setVisitedDate, clearVisited } =
+    useStadiumCollections();
+  const [visitedDateInput, setVisitedDateInput] = useState("");
+
+  useEffect(() => {
+    if (!stadium) {
+      return;
+    }
+
+    setVisitedDateInput(getVisitedDate(stadium.id) ?? "");
+  }, [getVisitedDate, stadium]);
 
   if (!stadium) {
     return (
@@ -83,7 +93,7 @@ export default function StadiumDetailScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Din tracker</Text>
           <Text style={styles.sectionText}>
-            Brug stadionets egen status til at skelne mellem steder, du allerede har været, og steder du vil planlægge
+            Brug stadionets egen status til at skelne mellem steder, du allerede har været, og steder du vil planlaegge
             en tur til senere.
           </Text>
           <View style={styles.trackerRow}>
@@ -102,9 +112,42 @@ export default function StadiumDetailScreen() {
               tone="wishlist"
             />
           </View>
+          <View style={styles.visitDateBlock}>
+            <Text style={styles.visitDateLabel}>Besøgsdato</Text>
+            <TextInput
+              onChangeText={setVisitedDateInput}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={colors.muted}
+              style={styles.visitDateInput}
+              value={visitedDateInput}
+            />
+            <View style={styles.visitDateActions}>
+              <ActionButton
+                label="Gem besøg"
+                onPress={() => setVisitedDate(stadium.id, visitedDateInput.trim() || null)}
+              />
+              <ActionButton
+                label="I dag"
+                onPress={() => {
+                  const today = new Date().toISOString().slice(0, 10);
+                  setVisitedDateInput(today);
+                  setVisitedDate(stadium.id, today);
+                }}
+                secondary
+              />
+              {isVisited(stadium.id) ? (
+                <ActionButton
+                  label="Fjern besøg"
+                  onPress={() => {
+                    setVisitedDateInput("");
+                    clearVisited(stadium.id);
+                  }}
+                  secondary
+                />
+              ) : null}
+            </View>
+          </View>
         </View>
-
-        <CommunityGalleryPanel stadiumId={stadium.id} />
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datafundament</Text>
@@ -291,6 +334,31 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     gap: spacing.sm,
     marginTop: spacing.xs,
+  },
+  visitDateBlock: {
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  visitDateLabel: {
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "800",
+    textTransform: "uppercase",
+  },
+  visitDateInput: {
+    backgroundColor: colors.paper,
+    borderColor: colors.line,
+    borderRadius: 16,
+    borderWidth: 1,
+    color: colors.ink,
+    fontSize: 16,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 14,
+  },
+  visitDateActions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
   },
   button: {
     borderRadius: 18,
