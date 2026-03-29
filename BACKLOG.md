@@ -11,6 +11,10 @@ Et levende overblik over næste skridt i produktet efter første live-deploy.
 - tydelige upload-regler og samtykke
 - attribution og rettighedserklæring fra uploaderen
 - Mål: gøre billedlaget community-bygget uden at vi selv bærer copyright-risikoen ved at kuratere andres billeder.
+Status:
+- policy og typed groundwork findes nu i repoet
+- stadium pages viser et community gallery-panel som placeholder
+- næste konkrete skridt er et rigtigt pending-submission flow
 
 ### 2. Trip itinerary
 - Udvid `visited` og `wishlist` til en rigtig rejseplan:

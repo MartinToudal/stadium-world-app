@@ -3,6 +3,7 @@ import * as Linking from "expo-linking";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { CommunityGalleryPanel } from "../../components/community-gallery-panel";
 import { FavoriteButton } from "../../components/favorite-button";
 import { StadiumStatusButton } from "../../components/stadium-status-button";
 import { colors, spacing } from "../../constants/theme";
@@ -102,6 +103,8 @@ export default function StadiumDetailScreen() {
             />
           </View>
         </View>
+
+        <CommunityGalleryPanel stadiumId={stadium.id} />
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Datafundament</Text>

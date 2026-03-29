@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "title": "Community Gallery Policy",
+  "summary": "Stadionbilleder skal komme fra brugerne selv og må kun vises, hvis uploaderen bekræfter rettigheder, samtykke og stadionrelevans.",
+  "requirements": [
+    "Uploaderen skal selv have taget billedet eller have eksplicit ret til at uploade det.",
+    "Billedet skal tydeligt relatere sig til det valgte stadion eller kampoplevelsen omkring stadionet.",
+    "Uploaderen skal acceptere, at billedet kan modereres, afvises eller fjernes senere.",
+    "Billedet må ikke indeholde vandmærker, reklamer eller indhold taget fra andre websites eller sociale medier.",
+    "Billedet må ikke krænke privatliv, indeholde hadefuldt indhold eller vise personer i klart problematiske situationer."
+  ],
+  "moderationStatuses": [
+    "pending",
+    "approved",
+    "rejected",
+    "flagged"
+  ],
+  "futureFields": [
+    "photoId",
+    "stadiumId",
+    "submittedBy",
+    "submittedAt",
+    "caption",
+    "takenAt",
+    "rightsConfirmed",
+    "consentConfirmed",
+    "moderationStatus",
+    "moderationNotes"
+  ]
+}
