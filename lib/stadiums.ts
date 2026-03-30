@@ -60,8 +60,116 @@ export const featuredLeagues = [
   "Serie A",
   "Bundesliga",
   "Ligue 1",
-  "MLS",
 ];
+
+export const leagueRankings: Record<string, string[]> = {
+  "Premier League": [
+    "Arsenal",
+    "Manchester City",
+    "Liverpool",
+    "Aston Villa",
+    "Manchester United",
+    "Chelsea",
+    "Brighton & Hove Albion",
+    "Newcastle United",
+    "Brentford",
+    "AFC Bournemouth",
+    "Everton",
+    "Fulham",
+    "Crystal Palace",
+    "Nottingham Forest",
+    "Tottenham Hotspur",
+    "Leeds United",
+    "Sunderland",
+    "West Ham United",
+    "Wolverhampton Wanderers",
+    "Burnley",
+  ],
+  "La Liga": [
+    "Barcelona",
+    "Real Madrid",
+    "Atlético de Madrid",
+    "Villarreal",
+    "Celta de Vigo",
+    "Real Betis",
+    "Real Sociedad",
+    "Athletic Club",
+    "Osasuna",
+    "Valencia",
+    "Getafe",
+    "Rayo Vallecano",
+    "Girona",
+    "Mallorca",
+    "Alavés",
+    "Espanyol",
+    "Sevilla",
+    "Levante",
+    "Elche",
+    "Real Oviedo",
+  ],
+  "Serie A": [
+    "Internazionale",
+    "Milan",
+    "Napoli",
+    "Juventus",
+    "Atalanta",
+    "Como",
+    "Roma",
+    "Lazio",
+    "Bologna",
+    "Fiorentina",
+    "Udinese",
+    "Torino",
+    "Sassuolo",
+    "Genoa",
+    "Parma",
+    "Cagliari",
+    "Cremonese",
+    "Lecce",
+    "Pisa",
+    "Hellas Verona",
+  ],
+  Bundesliga: [
+    "Bayern München",
+    "Borussia Dortmund",
+    "Bayer Leverkusen",
+    "Stuttgart",
+    "RB Leipzig",
+    "Hoffenheim",
+    "Freiburg",
+    "Eintracht Frankfurt",
+    "Mainz 05",
+    "Werder Bremen",
+    "Borussia M'Gladbach",
+    "Union Berlin",
+    "Augsburg",
+    "Hamburger SV",
+    "Wolfsburg",
+    "Köln",
+    "St. Pauli",
+    "Heidenheim",
+  ],
+  "Ligue 1": [
+    "Paris Saint-Germain",
+    "Lens",
+    "Monaco",
+    "Olympique Marseille",
+    "Olympique Lyonnais",
+    "Strasbourg",
+    "Lille",
+    "Rennes",
+    "Brest",
+    "Toulouse",
+    "Lorient",
+    "Nice",
+    "Auxerre",
+    "Paris FC",
+    "Angers SCO",
+    "Le Havre",
+    "Nantes",
+    "Metz",
+  ],
+};
 
 export const featuredCountries = [
   "United Kingdom",
@@ -174,4 +282,14 @@ export function sortStadiums(items: Stadium[], mode: (typeof sortModes)[number])
         return (b.capacity ?? 0) - (a.capacity ?? 0);
     }
   });
+}
+
+export function getLeagueRank(stadium: Stadium) {
+  const ranking = leagueRankings[stadium.league];
+  if (!ranking) {
+    return null;
+  }
+
+  const index = ranking.indexOf(stadium.team);
+  return index === -1 ? null : index + 1;
 }

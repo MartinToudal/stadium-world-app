@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
+import { router } from "expo-router";
 import { useDeferredValue, useMemo, useState } from "react";
-import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, spacing } from "../constants/theme";
@@ -9,13 +10,13 @@ import {
   allCountries,
   capacityBands,
   featuredLeagues,
+  formatCapacity,
+  getLeagueRank,
   matchesCapacityBand,
-  sortModes,
-  sortStadiums,
   stadiums,
+  Stadium,
 } from "../lib/stadiums";
 import { FilterChip } from "./filter-chip";
-import { StadiumCard } from "./stadium-card";
 import { TripPlannerPanel } from "./trip-planner-panel";
 
 type StadiumBrowserProps = {
@@ -27,6 +28,11 @@ type StadiumBrowserProps = {
   showTripPlanner?: boolean;
 };
 
+type StadiumRow = {
+  item: Stadium;
+  rank: number | null;
+};
+
 export function StadiumBrowser({
   defaultCollectionFilter = "all",
   heroTitle,
@@ -36,22 +42,21 @@ export function StadiumBrowser({
   showTripPlanner = false,
 }: StadiumBrowserProps) {
   const [query, setQuery] = useState("");
-  const [league, setLeague] = useState<string>("Alle");
+  const [league, setLeague] = useState<string>(featuredLeagues[0]);
   const [country, setCountry] = useState<string>("Alle");
   const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
-  const [sortMode, setSortMode] = useState<(typeof sortModes)[number]>("Størst først");
   const [collectionFilter, setCollectionFilter] = useState(defaultCollectionFilter);
-  const { favorites, visited, wishlist } = useStadiumCollections();
+  const { favorites, visited, wishlist, isFavorite, isVisited, isWishlisted, getVisitedDate } = useStadiumCollections();
   const deferredQuery = useDeferredValue(query);
 
-  const filtered = useMemo(() => {
+  const rows = useMemo<StadiumRow[]>(() => {
     const trimmedQuery = deferredQuery.trim().toLowerCase();
 
-    return sortStadiums(
-      stadiums
+    const filtered = stadiums
       .filter((stadium) => (league === "Alle" ? true : stadium.league === league))
       .filter((stadium) => (country === "Alle" ? true : stadium.country === country))
+      .filter((stadium) => matchesCapacityBand(stadium, capacityBand))
       .filter((stadium) => {
         switch (collectionFilter) {
           case "favorites":
@@ -64,7 +69,6 @@ export function StadiumBrowser({
             return true;
         }
       })
-      .filter((stadium) => matchesCapacityBand(stadium, capacityBand))
       .filter((stadium) => {
         if (!trimmedQuery) {
           return true;
@@ -73,527 +77,489 @@ export function StadiumBrowser({
         const haystack =
           `${stadium.team} ${stadium.stadiumName} ${stadium.city} ${stadium.country} ${stadium.league} ${stadium.aliases.join(" ")} ${stadium.tags.join(" ")}`.toLowerCase();
         return haystack.includes(trimmedQuery);
-      }),
-      sortMode
-    );
-  }, [capacityBand, collectionFilter, country, deferredQuery, favorites, league, sortMode, visited, wishlist]);
+      })
+      .map((item) => ({ item, rank: getLeagueRank(item) }));
+
+    return filtered.sort((a, b) => {
+      if (league !== "Alle") {
+        if (a.rank != null && b.rank != null) {
+          return a.rank - b.rank;
+        }
+        if (a.rank != null) {
+          return -1;
+        }
+        if (b.rank != null) {
+          return 1;
+        }
+      }
+
+      const leagueOrder =
+        featuredLeagues.indexOf(a.item.league) - featuredLeagues.indexOf(b.item.league);
+
+      if (league === "Alle" && leagueOrder !== 0) {
+        return leagueOrder;
+      }
+
+      return a.item.team.localeCompare(b.item.team);
+    });
+  }, [capacityBand, collectionFilter, country, deferredQuery, favorites, league, visited, wishlist]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <StatusBar style="dark" />
-      <FlatList
-        contentContainerStyle={styles.content}
-        data={filtered}
-        keyExtractor={(item) => item.id}
-        keyboardShouldPersistTaps="handled"
-        ListHeaderComponent={
-          <View style={styles.headerWrap}>
-            <View style={styles.hero}>
-              <View style={styles.heroOrbPrimary} />
-              <View style={styles.heroOrbSecondary} />
-              <View style={styles.heroGrid} />
-              <View style={styles.heroContent}>
-                <Text style={styles.eyebrow}>STADIUM WORLD</Text>
-                <Text style={styles.heroTitle}>{heroTitle}</Text>
-                <Text style={styles.heroText}>{heroText}</Text>
-                <View style={styles.heroStats}>
-                  <View style={styles.heroStat}>
-                    <Text style={styles.heroStatValue}>{stadiums.length}</Text>
-                    <Text style={styles.heroStatLabel}>stadions i datasættet</Text>
-                  </View>
-                  <View style={styles.heroStat}>
-                    <Text style={styles.heroStatValue}>{allCountries.length}</Text>
-                    <Text style={styles.heroStatLabel}>lande</Text>
-                  </View>
-                  <View style={styles.heroStat}>
-                    <Text style={styles.heroStatValue}>{visited.length}</Text>
-                    <Text style={styles.heroStatLabel}>besøgte stadions</Text>
-                  </View>
-                  <View style={styles.heroStat}>
-                    <Text style={styles.heroStatValue}>{wishlist.length}</Text>
-                    <Text style={styles.heroStatLabel}>på wishlist</Text>
-                  </View>
-                </View>
-              </View>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.hero}>
+          <Text style={styles.eyebrow}>STADIUM DIRECTORY</Text>
+          <Text style={styles.heroTitle}>{heroTitle}</Text>
+          <Text style={styles.heroText}>{heroText}</Text>
+        </View>
+
+        {showTripPlanner ? <TripPlannerPanel /> : null}
+
+        <View style={styles.panel}>
+          <View style={styles.panelHeader}>
+            <View>
+              <Text style={styles.panelEyebrow}>League Table</Text>
+              <Text style={styles.panelTitle}>{panelTitle}</Text>
             </View>
+            <View style={styles.countBadge}>
+              <Text style={styles.countBadgeText}>{rows.length}</Text>
+            </View>
+          </View>
 
-            {showTripPlanner ? <TripPlannerPanel /> : null}
+          <TextInput
+            onChangeText={setQuery}
+            placeholder="Start typing to see suggestions"
+            placeholderTextColor="#A09AA4"
+            style={styles.searchInput}
+            value={query}
+          />
 
-            <View style={styles.searchPanel}>
-              <View style={styles.panelHeader}>
-                <View style={styles.panelHeaderText}>
-                  <Text style={styles.panelEyebrow}>Curated browser</Text>
-                  <Text style={styles.panelTitle}>{panelTitle}</Text>
-                </View>
-                <View style={styles.panelBadge}>
-                  <Text style={styles.panelBadgeText}>{filtered.length}</Text>
-                </View>
-              </View>
-              <TextInput
-                onChangeText={setQuery}
-                placeholder="Søg på klub, stadion, by, land eller liga"
-                placeholderTextColor={colors.muted}
-                style={styles.input}
-                value={query}
-              />
+          <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
+            {featuredLeagues.map((option) => (
+              <FilterChip active={league === option} key={option} label={option} onPress={() => setLeague(option)} />
+            ))}
+          </ScrollView>
 
-              <View style={styles.filterBlock}>
-                <Text style={styles.filterLabel}>Liganiveau</Text>
-                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                  {["Alle", ...featuredLeagues].map((option) => (
-                    <FilterChip
-                      active={league === option}
-                      key={option}
-                      label={option}
-                      onPress={() => setLeague(option)}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
+          <View style={styles.filterGrid}>
+            <View style={styles.filterColumn}>
+              <Text style={styles.filterLabel}>Country</Text>
+              <View style={styles.dropdownWrap}>
+                <Pressable
+                  onPress={() => setCountryMenuOpen((value) => !value)}
+                  style={({ pressed }) => [
+                    styles.dropdownTrigger,
+                    countryMenuOpen && styles.dropdownTriggerOpen,
+                    pressed && styles.dropdownTriggerPressed,
+                  ]}
+                >
+                  <Text style={styles.dropdownValue}>{country}</Text>
+                  <Text style={styles.dropdownIcon}>{countryMenuOpen ? "▴" : "▾"}</Text>
+                </Pressable>
 
-              <View style={styles.filterBlock}>
-                <Text style={styles.filterLabel}>Lande</Text>
-                <View style={styles.dropdownWrap}>
-                  <Pressable
-                    onPress={() => setCountryMenuOpen((value) => !value)}
-                    style={({ pressed }) => [
-                      styles.dropdownTrigger,
-                      countryMenuOpen && styles.dropdownTriggerOpen,
-                      pressed && styles.dropdownTriggerPressed,
-                    ]}
-                  >
-                    <View>
-                      <Text style={styles.dropdownLabel}>Valgt land</Text>
-                      <Text style={styles.dropdownValue}>{country}</Text>
-                    </View>
-                    <Text style={styles.dropdownIcon}>{countryMenuOpen ? "▴" : "▾"}</Text>
-                  </Pressable>
-
-                  {countryMenuOpen ? (
-                    <View style={styles.dropdownMenu}>
-                      <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
-                        {["Alle", ...allCountries].map((option) => (
-                          <Pressable
-                            key={option}
-                            onPress={() => {
-                              setCountry(option);
-                              setCountryMenuOpen(false);
-                            }}
-                            style={({ pressed }) => [
-                              styles.dropdownOption,
-                              country === option && styles.dropdownOptionActive,
-                              pressed && styles.dropdownOptionPressed,
+                {countryMenuOpen ? (
+                  <View style={styles.dropdownMenu}>
+                    <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
+                      {["Alle", ...allCountries].map((option) => (
+                        <Pressable
+                          key={option}
+                          onPress={() => {
+                            setCountry(option);
+                            setCountryMenuOpen(false);
+                          }}
+                          style={({ pressed }) => [
+                            styles.dropdownOption,
+                            country === option && styles.dropdownOptionActive,
+                            pressed && styles.dropdownOptionPressed,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.dropdownOptionText,
+                              country === option && styles.dropdownOptionTextActive,
                             ]}
                           >
-                            <Text
-                              style={[
-                                styles.dropdownOptionText,
-                                country === option && styles.dropdownOptionTextActive,
-                              ]}
-                            >
-                              {option}
-                            </Text>
-                          </Pressable>
-                        ))}
-                      </ScrollView>
-                    </View>
-                  ) : null}
-                </View>
-              </View>
-
-              {showCollectionFilters ? (
-                <View style={styles.filterBlock}>
-                  <Text style={styles.filterLabel}>Samlinger</Text>
-                  <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                    <FilterChip
-                      active={collectionFilter === "all"}
-                      label="Alle gemte spor"
-                      onPress={() => setCollectionFilter("all")}
-                    />
-                    <FilterChip
-                      active={collectionFilter === "favorites"}
-                      label={`Favoritter (${favorites.length})`}
-                      onPress={() => setCollectionFilter("favorites")}
-                    />
-                    <FilterChip
-                      active={collectionFilter === "visited"}
-                      label={`Besøgt (${visited.length})`}
-                      onPress={() => setCollectionFilter("visited")}
-                    />
-                    <FilterChip
-                      active={collectionFilter === "wishlist"}
-                      label={`Wishlist (${wishlist.length})`}
-                      onPress={() => setCollectionFilter("wishlist")}
-                    />
-                  </ScrollView>
-                </View>
-              ) : (
-                <View style={styles.filterBlock}>
-                  <Text style={styles.filterLabel}>Kuratering</Text>
-                  <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                    <FilterChip
-                      active={collectionFilter === "all"}
-                      label="Alle stadions"
-                      onPress={() => setCollectionFilter("all")}
-                    />
-                    <FilterChip
-                      active={collectionFilter === "favorites"}
-                      label={`Favoritter (${favorites.length})`}
-                      onPress={() => setCollectionFilter("favorites")}
-                    />
-                  </ScrollView>
-                </View>
-              )}
-
-              <View style={styles.filterBlock}>
-                <Text style={styles.filterLabel}>Kapacitet</Text>
-                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                  {capacityBands.map((option) => (
-                    <FilterChip
-                      active={capacityBand === option}
-                      key={option}
-                      label={option}
-                      onPress={() => setCapacityBand(option)}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
-
-              <View style={styles.filterBlock}>
-                <Text style={styles.filterLabel}>Sortering</Text>
-                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-                  {sortModes.map((option) => (
-                    <FilterChip
-                      active={sortMode === option}
-                      key={option}
-                      label={option}
-                      onPress={() => setSortMode(option)}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
-
-              <View style={styles.statsRow}>
-                <View style={styles.statBlock}>
-                  <Text style={styles.statValue}>{filtered.length}</Text>
-                  <Text style={styles.statLabel}>viste stadions</Text>
-                </View>
-                <View style={styles.statBlock}>
-                  <Text style={styles.statValue}>{new Set(filtered.map((item) => item.country)).size}</Text>
-                  <Text style={styles.statLabel}>lande</Text>
-                </View>
-                <View style={styles.statBlock}>
-                  <Text style={styles.statValue}>{new Set(filtered.map((item) => item.league)).size}</Text>
-                  <Text style={styles.statLabel}>ligaer</Text>
-                </View>
-                <View style={styles.statBlock}>
-                  <Text style={styles.statValue}>{allCountries.length}</Text>
-                  <Text style={styles.statLabel}>lande totalt</Text>
-                </View>
+                            {option}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  </View>
+                ) : null}
               </View>
             </View>
+
+            <View style={styles.filterColumn}>
+              <Text style={styles.filterLabel}>Capacity</Text>
+              <ScrollView contentContainerStyle={styles.miniChipRow} horizontal showsHorizontalScrollIndicator={false}>
+                {capacityBands.map((option) => (
+                  <FilterChip
+                    active={capacityBand === option}
+                    key={option}
+                    label={option}
+                    onPress={() => setCapacityBand(option)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
           </View>
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>Ingen stadions matcher endnu</Text>
-            <Text style={styles.emptyText}>
-              Prøv at nulstille et filter eller søg bredere på klub, by eller land.
-            </Text>
+
+          {showCollectionFilters ? (
+            <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
+              <FilterChip active={collectionFilter === "all"} label="All" onPress={() => setCollectionFilter("all")} />
+              <FilterChip
+                active={collectionFilter === "favorites"}
+                label={`Favorites (${favorites.length})`}
+                onPress={() => setCollectionFilter("favorites")}
+              />
+              <FilterChip
+                active={collectionFilter === "visited"}
+                label={`Visited (${visited.length})`}
+                onPress={() => setCollectionFilter("visited")}
+              />
+              <FilterChip
+                active={collectionFilter === "wishlist"}
+                label={`Wishlist (${wishlist.length})`}
+                onPress={() => setCollectionFilter("wishlist")}
+              />
+            </ScrollView>
+          ) : null}
+
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.headerCell, styles.rankCell]}>Rank</Text>
+              <Text style={[styles.headerCell, styles.teamCell]}>Team</Text>
+              <Text style={[styles.headerCell, styles.metaCell]}>Stadium</Text>
+              <Text style={[styles.headerCell, styles.metaCell]}>City</Text>
+              <Text style={[styles.headerCell, styles.statusCell]}>Visit</Text>
+            </View>
+
+            {rows.length ? (
+              rows.map(({ item, rank }, index) => {
+                const favorite = isFavorite(item.id);
+                const visitedState = isVisited(item.id);
+                const wishlisted = isWishlisted(item.id);
+                const visitedDate = getVisitedDate(item.id);
+
+                return (
+                  <Pressable
+                    key={item.id}
+                    onPress={() => router.push(`/stadium/${item.id}`)}
+                    style={({ pressed }) => [
+                      styles.tableRow,
+                      index % 2 === 0 ? styles.rowLight : styles.rowWhite,
+                      pressed && styles.rowPressed,
+                    ]}
+                  >
+                    <Text style={[styles.rowCell, styles.rankCell, styles.rankValue]}>{rank ?? "-"}</Text>
+                    <View style={[styles.rowCell, styles.teamCell]}>
+                      <Text style={styles.teamName}>{item.team}</Text>
+                      <Text style={styles.teamMeta}>{item.league}</Text>
+                    </View>
+                    <Text style={[styles.rowCell, styles.metaCell, styles.metaValue]} numberOfLines={2}>
+                      {item.stadiumName}
+                    </Text>
+                    <Text style={[styles.rowCell, styles.metaCell, styles.metaValue]} numberOfLines={1}>
+                      {item.city}
+                    </Text>
+                    <View style={[styles.rowCell, styles.statusCell]}>
+                      {visitedState ? (
+                        <Text style={styles.statusTextStrong}>{visitedDate ?? "Visited"}</Text>
+                      ) : wishlisted ? (
+                        <Text style={styles.statusText}>Wishlist</Text>
+                      ) : favorite ? (
+                        <Text style={styles.statusText}>Saved</Text>
+                      ) : (
+                        <Text style={styles.statusText}>Open</Text>
+                      )}
+                    </View>
+                  </Pressable>
+                );
+              })
+            ) : (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyTitle}>No clubs match the current filters</Text>
+                <Text style={styles.emptyText}>Try another league, country or search term.</Text>
+              </View>
+            )}
           </View>
-        }
-        numColumns={Platform.OS === "web" ? 2 : 1}
-        columnWrapperStyle={Platform.OS === "web" ? styles.columnWrap : undefined}
-        renderItem={({ item }) => <StadiumCard stadium={item} />}
-        showsVerticalScrollIndicator={false}
-      />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: colors.paper,
+    backgroundColor: "#F7F6F4",
     flex: 1,
   },
   content: {
-    gap: spacing.md,
-    paddingBottom: spacing.xl,
-    paddingHorizontal: spacing.md,
-  },
-  headerWrap: {
     gap: spacing.lg,
-    paddingBottom: spacing.md,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
   },
   hero: {
-    backgroundColor: colors.ink,
-    borderRadius: 32,
-    marginTop: spacing.sm,
-    minHeight: 320,
-    overflow: "hidden",
-    position: "relative",
-  },
-  heroOrbPrimary: {
-    backgroundColor: colors.accent,
-    borderRadius: 999,
-    height: 260,
-    opacity: 0.9,
-    position: "absolute",
-    right: -40,
-    top: -50,
-    width: 260,
-  },
-  heroOrbSecondary: {
-    backgroundColor: colors.moss,
-    borderRadius: 999,
-    height: 220,
-    left: -30,
-    opacity: 0.6,
-    position: "absolute",
-    top: 130,
-    width: 220,
-  },
-  heroGrid: {
-    ...StyleSheet.absoluteFillObject,
-    borderColor: "rgba(255,255,255,0.06)",
+    backgroundColor: colors.white,
+    borderColor: "#E0DCE6",
+    borderRadius: 20,
     borderWidth: 1,
-    opacity: 0.25,
-  },
-  heroContent: {
     gap: spacing.sm,
-    justifyContent: "flex-end",
-    minHeight: 320,
     padding: spacing.lg,
   },
   eyebrow: {
-    color: colors.accentSoft,
-    fontSize: 12,
+    color: "#5E5371",
+    fontSize: 11,
     fontWeight: "800",
-    letterSpacing: 2,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
   },
   heroTitle: {
-    color: colors.white,
-    fontSize: 34,
+    color: "#241B39",
+    fontSize: 32,
     fontWeight: "900",
-    lineHeight: 40,
-    maxWidth: 740,
+    lineHeight: 36,
   },
   heroText: {
-    color: "#F5EDE1",
-    fontSize: 16,
-    lineHeight: 24,
-    maxWidth: 620,
+    color: "#6B6377",
+    fontSize: 15,
+    lineHeight: 22,
+    maxWidth: 780,
   },
-  heroStats: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  heroStat: {
-    backgroundColor: "rgba(255,255,255,0.08)",
-    borderColor: "rgba(255,255,255,0.12)",
-    borderRadius: 18,
-    borderWidth: 1,
-    minWidth: 120,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  heroStatValue: {
-    color: colors.white,
-    fontSize: 24,
-    fontWeight: "900",
-  },
-  heroStatLabel: {
-    color: "#DCCFC1",
-    fontSize: 12,
-    marginTop: 4,
-  },
-  searchPanel: {
+  panel: {
     backgroundColor: colors.white,
-    borderColor: colors.line,
-    borderRadius: 32,
+    borderColor: "#DDD8E2",
+    borderRadius: 20,
     borderWidth: 1,
     gap: spacing.md,
-    padding: spacing.lg,
-    shadowColor: colors.ink,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
-    shadowRadius: 20,
+    padding: spacing.md,
   },
   panelHeader: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  panelHeaderText: {
-    gap: 4,
-  },
   panelEyebrow: {
-    color: colors.gold,
-    fontSize: 12,
+    color: "#8B8594",
+    fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.2,
     textTransform: "uppercase",
   },
-  panelBadge: {
-    alignItems: "center",
-    backgroundColor: colors.ink,
-    borderRadius: 999,
-    height: 48,
-    justifyContent: "center",
-    width: 48,
-  },
-  panelBadgeText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "900",
-  },
   panelTitle: {
-    color: colors.ink,
+    color: "#241B39",
     fontSize: 24,
-    fontWeight: "800",
-  },
-  input: {
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
-    borderRadius: 18,
-    borderWidth: 1,
-    color: colors.ink,
-    fontSize: 16,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 16,
-  },
-  dropdownWrap: {
-    gap: spacing.sm,
-  },
-  dropdownTrigger: {
-    alignItems: "center",
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
-    borderRadius: 18,
-    borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: spacing.md,
-    paddingVertical: 14,
-  },
-  dropdownTriggerOpen: {
-    borderColor: colors.accent,
-  },
-  dropdownTriggerPressed: {
-    opacity: 0.88,
-  },
-  dropdownLabel: {
-    color: colors.muted,
-    fontSize: 11,
-    fontWeight: "800",
-    letterSpacing: 1,
-    textTransform: "uppercase",
-  },
-  dropdownValue: {
-    color: colors.ink,
-    fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "900",
     marginTop: 4,
   },
-  dropdownIcon: {
-    color: colors.navy,
-    fontSize: 18,
-    fontWeight: "800",
+  countBadge: {
+    alignItems: "center",
+    backgroundColor: "#241B39",
+    borderRadius: 12,
+    height: 42,
+    justifyContent: "center",
+    minWidth: 42,
+    paddingHorizontal: 12,
   },
-  dropdownMenu: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
-    borderRadius: 18,
-    borderWidth: 1,
-    maxHeight: 280,
-    overflow: "hidden",
-  },
-  dropdownScroll: {
-    maxHeight: 280,
-  },
-  dropdownOption: {
-    borderTopColor: colors.paper,
-    borderTopWidth: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 14,
-  },
-  dropdownOptionActive: {
-    backgroundColor: colors.ink,
-  },
-  dropdownOptionPressed: {
-    opacity: 0.88,
-  },
-  dropdownOptionText: {
-    color: colors.ink,
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  dropdownOptionTextActive: {
+  countBadgeText: {
     color: colors.white,
+    fontSize: 15,
+    fontWeight: "900",
   },
-  filterBlock: {
-    gap: spacing.sm,
-  },
-  filterLabel: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 1,
-    textTransform: "uppercase",
+  searchInput: {
+    backgroundColor: "#F5F3F6",
+    borderColor: "#D9D3DE",
+    borderRadius: 12,
+    borderWidth: 1,
+    color: "#241B39",
+    fontSize: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
   },
   chipRow: {
     gap: spacing.sm,
     paddingRight: spacing.sm,
   },
-  statsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+  filterGrid: {
+    gap: spacing.md,
+  },
+  filterColumn: {
     gap: spacing.sm,
   },
-  statBlock: {
-    backgroundColor: colors.paper,
-    borderRadius: 20,
-    minWidth: 110,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+  filterLabel: {
+    color: "#8B8594",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
   },
-  statValue: {
-    color: colors.navy,
-    fontSize: 22,
-    fontWeight: "900",
+  miniChipRow: {
+    gap: spacing.sm,
+    paddingRight: spacing.sm,
   },
-  statLabel: {
-    color: colors.muted,
-    fontSize: 13,
-    marginTop: 4,
+  dropdownWrap: {
+    gap: spacing.xs,
   },
-  columnWrap: {
-    gap: spacing.md,
+  dropdownTrigger: {
+    alignItems: "center",
+    backgroundColor: "#F5F3F6",
+    borderColor: "#D9D3DE",
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: "row",
     justifyContent: "space-between",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
   },
-  emptyState: {
+  dropdownTriggerOpen: {
+    borderColor: "#241B39",
+  },
+  dropdownTriggerPressed: {
+    opacity: 0.9,
+  },
+  dropdownValue: {
+    color: "#241B39",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  dropdownIcon: {
+    color: "#241B39",
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  dropdownMenu: {
+    backgroundColor: colors.white,
+    borderColor: "#D9D3DE",
+    borderRadius: 12,
+    borderWidth: 1,
+    maxHeight: 240,
+    overflow: "hidden",
+  },
+  dropdownScroll: {
+    maxHeight: 240,
+  },
+  dropdownOption: {
+    borderTopColor: "#F0ECF3",
+    borderTopWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  dropdownOptionActive: {
+    backgroundColor: "#241B39",
+  },
+  dropdownOptionPressed: {
+    opacity: 0.9,
+  },
+  dropdownOptionText: {
+    color: "#241B39",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  dropdownOptionTextActive: {
+    color: colors.white,
+  },
+  table: {
+    borderColor: "#D9D3DE",
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  tableHeader: {
     alignItems: "center",
     backgroundColor: colors.white,
-    borderColor: colors.line,
-    borderRadius: 28,
-    borderWidth: 1,
-    marginTop: spacing.sm,
+    borderBottomColor: "#2C2242",
+    borderBottomWidth: 1,
+    flexDirection: "row",
+    minHeight: 54,
+    paddingHorizontal: 12,
+  },
+  headerCell: {
+    color: "#8B8594",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
+  tableRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    minHeight: 54,
+    paddingHorizontal: 12,
+  },
+  rowLight: {
+    backgroundColor: "#F3F3F3",
+  },
+  rowWhite: {
+    backgroundColor: colors.white,
+  },
+  rowPressed: {
+    opacity: 0.86,
+  },
+  rowCell: {
+    justifyContent: "center",
+  },
+  rankCell: {
+    width: 56,
+  },
+  teamCell: {
+    flex: 1.6,
+    paddingRight: 12,
+  },
+  metaCell: {
+    flex: 1.2,
+    paddingRight: 12,
+  },
+  statusCell: {
+    minWidth: 100,
+  },
+  rankValue: {
+    color: "#241B39",
+    fontSize: 18,
+    fontWeight: "900",
+  },
+  teamName: {
+    color: "#241B39",
+    fontSize: 16,
+    fontWeight: "900",
+    lineHeight: 20,
+    textTransform: "uppercase",
+  },
+  teamMeta: {
+    color: "#7D7687",
+    fontSize: 11,
+    fontWeight: "700",
+    marginTop: 2,
+  },
+  metaValue: {
+    color: "#463B58",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  statusText: {
+    color: "#7D7687",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  statusTextStrong: {
+    color: "#241B39",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  emptyState: {
+    backgroundColor: colors.white,
     padding: spacing.xl,
   },
   emptyTitle: {
-    color: colors.ink,
-    fontSize: 22,
+    color: "#241B39",
+    fontSize: 18,
     fontWeight: "800",
     textAlign: "center",
   },
   emptyText: {
-    color: colors.muted,
-    fontSize: 15,
-    lineHeight: 22,
+    color: "#7D7687",
+    fontSize: 14,
+    lineHeight: 20,
     marginTop: spacing.sm,
-    maxWidth: 420,
     textAlign: "center",
   },
 });
