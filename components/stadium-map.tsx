@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { colors, spacing } from "../constants/theme";
-import { Stadium } from "../lib/stadiums";
+import { hasCoordinates, Stadium } from "../lib/stadiums";
 
 type StadiumMapProps = {
   stadiums: Stadium[];
@@ -35,9 +35,10 @@ function getCountryGroups(stadiums: Stadium[]) {
 }
 
 export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) {
-  const countryGroups = getCountryGroups(stadiums);
+  const mappableStadiums = stadiums.filter(hasCoordinates);
+  const countryGroups = getCountryGroups(mappableStadiums);
   const topCountries = countryGroups.slice(0, 8);
-  const selectedStadium = stadiums.find((stadium) => stadium.id === selectedId) ?? null;
+  const selectedStadium = mappableStadiums.find((stadium) => stadium.id === selectedId) ?? null;
 
   return (
     <View style={styles.frame}>
@@ -77,8 +78,8 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
             <Text style={styles.regionLabelText}>South America</Text>
           </View>
 
-          {stadiums.map((stadium) => {
-            const point = toMapPoint(stadium.latitude, stadium.longitude);
+          {mappableStadiums.map((stadium) => {
+            const point = toMapPoint(stadium.latitude as number, stadium.longitude as number);
             const active = stadium.id === selectedId;
 
             return (
@@ -106,7 +107,7 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
               style={[
                 styles.callout,
                 {
-                  ...toMapPoint(selectedStadium.latitude, selectedStadium.longitude),
+                  ...toMapPoint(selectedStadium.latitude as number, selectedStadium.longitude as number),
                 },
               ]}
             >
@@ -120,7 +121,7 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
 
       <View style={styles.summaryRow}>
         <StatCard label="Stadions" value={String(stadiums.length)} />
-        <StatCard label="Lande" value={String(new Set(stadiums.map((stadium) => stadium.country)).size)} />
+        <StatCard label="Kortklare" value={String(mappableStadiums.length)} />
         <StatCard label="Hotspot" value={topCountries[0]?.country ?? "Ingen"} />
       </View>
 

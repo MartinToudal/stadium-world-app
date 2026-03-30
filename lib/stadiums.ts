@@ -8,15 +8,15 @@ export type Stadium = {
   country: string;
   tier: number | null;
   city: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   capacity: number | null;
   opened: number | null;
   surface: string | null;
   source: string | null;
   sourceHost: string | null;
   region: string;
-  coordinatesLabel: string;
+  coordinatesLabel: string | null;
   capacityBucket: string;
   isTopFlight: boolean;
   locationLabel: string;
@@ -93,7 +93,15 @@ export function formatCapacity(value: number | null) {
 }
 
 export function stadiumMapUrl(stadium: Stadium) {
+  if (stadium.latitude == null || stadium.longitude == null) {
+    return null;
+  }
+
   return `https://www.google.com/maps/search/?api=1&query=${stadium.latitude},${stadium.longitude}`;
+}
+
+export function hasCoordinates(stadium: Stadium) {
+  return stadium.latitude != null && stadium.longitude != null;
 }
 
 export function getRegionForCountry(country: string) {
@@ -109,7 +117,9 @@ export function filterByRegion(items: Stadium[], region: string) {
 }
 
 export function getMapCenter(items: Stadium[]) {
-  if (!items.length) {
+  const mappableItems = items.filter(hasCoordinates);
+
+  if (!mappableItems.length) {
     return {
       latitude: 20,
       longitude: 0,
@@ -118,8 +128,8 @@ export function getMapCenter(items: Stadium[]) {
     };
   }
 
-  const latitudes = items.map((item) => item.latitude);
-  const longitudes = items.map((item) => item.longitude);
+  const latitudes = mappableItems.map((item) => item.latitude as number);
+  const longitudes = mappableItems.map((item) => item.longitude as number);
   const minLat = Math.min(...latitudes);
   const maxLat = Math.max(...latitudes);
   const minLon = Math.min(...longitudes);

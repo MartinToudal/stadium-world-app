@@ -15,6 +15,7 @@ import {
   filterByRegion,
   formatCapacity,
   getRegionForCountry,
+  hasCoordinates,
   matchesCapacityBand,
   stadiumMapUrl,
   stadiums,
@@ -50,8 +51,10 @@ export default function MapScreen() {
   const previewStadiums = [...regionStadiums]
     .sort((a, b) => (b.capacity ?? 0) - (a.capacity ?? 0))
     .slice(0, 6);
+  const mappableRegionStadiums = regionStadiums.filter(hasCoordinates);
   const selectedStadium =
     regionStadiums.find((stadium) => stadium.id === selectedId) ?? previewStadiums[0] ?? regionStadiums[0] ?? null;
+  const selectedMapUrl = selectedStadium ? stadiumMapUrl(selectedStadium) : null;
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -115,6 +118,16 @@ export default function MapScreen() {
           stadiums={regionStadiums}
         />
 
+        {!mappableRegionStadiums.length ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Kortdata kommer løbende</Text>
+            <Text style={styles.sectionText}>
+              Denne del af listen mangler stadig koordinater. Klubberne er med i overblikket nu, og kortlaget bliver
+              udfyldt efterhaanden som vi beriger data.
+            </Text>
+          </View>
+        ) : null}
+
         {selectedStadium ? (
           <View style={styles.selectedPanel}>
             <View style={styles.selectedHeader}>
@@ -133,7 +146,7 @@ export default function MapScreen() {
               <Pressable onPress={() => router.push(`/stadium/${selectedStadium.id}`)} style={styles.primaryAction}>
                 <Text style={styles.primaryActionText}>Åbn detalje</Text>
               </Pressable>
-              <Pressable onPress={() => Linking.openURL(stadiumMapUrl(selectedStadium))} style={styles.secondaryAction}>
+              <Pressable disabled={!selectedMapUrl} onPress={() => selectedMapUrl && Linking.openURL(selectedMapUrl)} style={styles.secondaryAction}>
                 <Text style={styles.secondaryActionText}>Åbn i kort</Text>
               </Pressable>
             </View>

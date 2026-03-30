@@ -16,6 +16,7 @@ export default function StadiumDetailScreen() {
   const { isFavorite, isVisited, isWishlisted, getVisitedDate, toggleFavorite, toggleVisited, toggleWishlist, setVisitedDate, clearVisited } =
     useStadiumCollections();
   const [visitedDateInput, setVisitedDateInput] = useState("");
+  const mapUrl = stadium ? stadiumMapUrl(stadium) : null;
 
   useEffect(() => {
     if (!stadium) {
@@ -50,7 +51,7 @@ export default function StadiumDetailScreen() {
                 {stadium.team} · {stadium.league}
               </Text>
               <Text style={styles.heroMeta}>
-                {stadium.city} · {stadium.latitude.toFixed(4)}, {stadium.longitude.toFixed(4)}
+                {stadium.city} · {stadium.coordinatesLabel ?? "Koordinater kommer senere"}
               </Text>
             </View>
             <FavoriteButton active={isFavorite(stadium.id)} onPress={() => toggleFavorite(stadium.id)} />
@@ -80,7 +81,7 @@ export default function StadiumDetailScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Placering</Text>
           <Text style={styles.sectionText}>{stadium.locationLabel}</Text>
-          <Text style={styles.coordinates}>{stadium.coordinatesLabel}</Text>
+          <Text style={styles.coordinates}>{stadium.coordinatesLabel ?? "Koordinater ikke tilføjet endnu"}</Text>
         </View>
 
         <View style={styles.grid}>
@@ -158,7 +159,7 @@ export default function StadiumDetailScreen() {
         </View>
 
         <View style={styles.actions}>
-          <ActionButton label="Åbn i kort" onPress={() => Linking.openURL(stadiumMapUrl(stadium))} />
+          {mapUrl ? <ActionButton label="Åbn i kort" onPress={() => Linking.openURL(mapUrl)} /> : null}
           {stadium.source ? (
             <ActionButton label="Åbn kilde" onPress={() => Linking.openURL(stadium.source!)} secondary />
           ) : null}

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 
 import { colors, spacing } from "../constants/theme";
-import { getMapCenter, Stadium } from "../lib/stadiums";
+import { getMapCenter, hasCoordinates, Stadium } from "../lib/stadiums";
 
 type StadiumMapProps = {
   stadiums: Stadium[];
@@ -11,14 +11,15 @@ type StadiumMapProps = {
 };
 
 export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) {
-  const region = getMapCenter(stadiums);
+  const mappableStadiums = stadiums.filter(hasCoordinates);
+  const region = getMapCenter(mappableStadiums);
 
   return (
     <View style={styles.frame}>
       <MapView initialRegion={region} style={styles.map}>
-        {stadiums.map((stadium) => (
+        {mappableStadiums.map((stadium) => (
           <Marker
-            coordinate={{ latitude: stadium.latitude, longitude: stadium.longitude }}
+            coordinate={{ latitude: stadium.latitude as number, longitude: stadium.longitude as number }}
             key={stadium.id}
             pinColor={stadium.id === selectedId ? colors.plum : colors.accent}
             onPress={() => onSelect(stadium.id)}

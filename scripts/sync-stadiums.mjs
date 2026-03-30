@@ -77,6 +77,8 @@ function main() {
     const region = countryToRegion[row.country] ?? "Other";
     const capacity = toNumber(row.capacity);
     const opened = toNumber(row.opened);
+    const latitude = toNumber(row.lat);
+    const longitude = toNumber(row.lon);
     const override = overrides[row.id] ?? {};
     const sourceHost = row.source ? new URL(row.source).hostname.replace("www.", "") : null;
     const capacityBucket = !capacity
@@ -104,15 +106,16 @@ function main() {
       country: row.country,
       tier: toNumber(row.tier),
       city: row.city,
-      latitude: Number(row.lat),
-      longitude: Number(row.lon),
+      latitude,
+      longitude,
       capacity,
       opened,
       surface: row.surface || null,
       source: row.source || null,
       sourceHost,
       region,
-      coordinatesLabel: `${Number(row.lat).toFixed(4)}, ${Number(row.lon).toFixed(4)}`,
+      coordinatesLabel:
+        latitude != null && longitude != null ? `${latitude.toFixed(4)}, ${longitude.toFixed(4)}` : null,
       capacityBucket,
       isTopFlight: row.tier === "1",
       locationLabel: `${row.city}, ${row.country}`,
