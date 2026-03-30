@@ -1,7 +1,5 @@
 import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
 
-import { colors } from "../constants/theme";
-
 type StadiumStatusButtonProps = {
   active: boolean;
   activeLabel: string;
@@ -55,29 +53,31 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   visited: {
-    backgroundColor: colors.white,
-    borderColor: colors.moss,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
   },
   visitedActive: {
-    backgroundColor: colors.moss,
+    backgroundColor: "#262626",
+    borderColor: "#404040",
   },
   visitedLabel: {
-    color: colors.moss,
+    color: "#D4D4D4",
   },
   visitedLabelActive: {
-    color: colors.white,
+    color: "#FAFAFA",
   },
   wishlist: {
-    backgroundColor: colors.white,
-    borderColor: colors.gold,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
   },
   wishlistActive: {
-    backgroundColor: "#F7E9C8",
+    backgroundColor: "#262626",
+    borderColor: "#404040",
   },
   wishlistLabel: {
-    color: colors.gold,
+    color: "#D4D4D4",
   },
   wishlistLabelActive: {
-    color: colors.ink,
+    color: "#FAFAFA",
   },
 });

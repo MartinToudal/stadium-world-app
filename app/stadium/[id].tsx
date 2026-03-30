@@ -1,20 +1,28 @@
-import { Stack, useLocalSearchParams } from "expo-router";
 import * as Linking from "expo-linking";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
 
 import { FavoriteButton } from "../../components/favorite-button";
 import { StadiumStatusButton } from "../../components/stadium-status-button";
-import { colors, spacing } from "../../constants/theme";
+import { spacing } from "../../constants/theme";
 import { useStadiumCollections } from "../../lib/favorites";
 import { findStadiumById, formatCapacity, stadiumMapUrl } from "../../lib/stadiums";
 
 export default function StadiumDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const stadium = findStadiumById(id);
-  const { isFavorite, isVisited, isWishlisted, getVisitedDate, toggleFavorite, toggleVisited, toggleWishlist, setVisitedDate, clearVisited } =
-    useStadiumCollections();
+  const {
+    isFavorite,
+    isVisited,
+    isWishlisted,
+    getVisitedDate,
+    toggleFavorite,
+    toggleWishlist,
+    setVisitedDate,
+    clearVisited,
+  } = useStadiumCollections();
   const [visitedDateInput, setVisitedDateInput] = useState("");
   const mapUrl = stadium ? stadiumMapUrl(stadium) : null;
 
@@ -32,77 +40,60 @@ export default function StadiumDetailScreen() {
         <Stack.Screen options={{ title: "Ikke fundet" }} />
         <View style={styles.missingState}>
           <Text style={styles.missingTitle}>Stadionet blev ikke fundet</Text>
-          <Text style={styles.missingText}>Prøv at gå tilbage til oversigten og vælg en stadionpost igen.</Text>
+          <Text style={styles.missingText}>Gå tilbage til oversigten og vælg stadionet igen.</Text>
         </View>
       </SafeAreaView>
     );
   }
 
+  const visited = isVisited(stadium.id);
+  const visitedDate = getVisitedDate(stadium.id);
+  const infoRows = [
+    { label: "Klub", value: stadium.team },
+    { label: "Liga", value: stadium.league },
+    { label: "By", value: stadium.city },
+    { label: "Land", value: stadium.country },
+    { label: "Kapacitet", value: formatCapacity(stadium.capacity) },
+    { label: "Åbnet", value: stadium.opened ? String(stadium.opened) : "Ukendt" },
+    { label: "Underlag", value: stadium.surface ?? "Ikke registreret" },
+    { label: "Niveau", value: stadium.tier ? `${stadium.tier}. niveau` : "Ukendt" },
+  ];
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Stack.Screen options={{ title: stadium.team }} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.heroCard}>
+        <View style={styles.hero}>
           <View style={styles.heroTopRow}>
-            <View style={styles.heroTopText}>
-              <Text style={styles.heroEyebrow}>{stadium.country}</Text>
-              <Text style={styles.heroTitle}>{stadium.stadiumName}</Text>
-              <Text style={styles.heroSubtitle}>
-                {stadium.team} · {stadium.league}
-              </Text>
-              <Text style={styles.heroMeta}>
-                {stadium.city} · {stadium.coordinatesLabel ?? "Koordinater kommer senere"}
+            <View style={styles.heroTextWrap}>
+              <Text style={styles.eyebrow}>{stadium.league}</Text>
+              <Text style={styles.title}>{stadium.team}</Text>
+              <Text style={styles.subtitle}>{stadium.stadiumName}</Text>
+              <Text style={styles.meta}>
+                {stadium.city}, {stadium.country}
               </Text>
             </View>
             <FavoriteButton active={isFavorite(stadium.id)} onPress={() => toggleFavorite(stadium.id)} />
           </View>
         </View>
 
-        <View style={styles.grid}>
-          <InfoCard label="Kapacitet" value={formatCapacity(stadium.capacity)} />
-          <InfoCard label="Åbnet" value={stadium.opened ? String(stadium.opened) : "Ukendt"} />
-          <InfoCard label="Underlag" value={stadium.surface ?? "Ikke registreret"} />
-          <InfoCard label="Niveau" value={stadium.tier ? `${stadium.tier}. niveau` : "Ukendt"} />
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Profil</Text>
-          <Text style={styles.sectionText}>{stadium.description}</Text>
-          {stadium.statusNote ? <Text style={styles.statusNote}>{stadium.statusNote}</Text> : null}
-          <View style={styles.tagWrap}>
-            {stadium.tags.slice(0, 8).map((tag) => (
-              <View key={tag} style={styles.tag}>
-                <Text style={styles.tagText}>{tag}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Placering</Text>
-          <Text style={styles.sectionText}>{stadium.locationLabel}</Text>
-          <Text style={styles.coordinates}>{stadium.coordinatesLabel ?? "Koordinater ikke tilføjet endnu"}</Text>
-        </View>
-
-        <View style={styles.grid}>
-          <InfoCard label="Region" value={stadium.region} />
-          <InfoCard label="Kildehost" value={stadium.sourceHost ?? "Ukendt"} />
-          <InfoCard label="Kapacitetsklasse" value={stadium.capacityBucket} />
-          <InfoCard label="Aliaser" value={stadium.aliases[0] ?? "Ingen"} />
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Din tracker</Text>
-          <Text style={styles.sectionText}>
-            Brug stadionets egen status til at skelne mellem steder, du allerede har været, og steder du vil planlaegge
-            en tur til senere.
-          </Text>
-          <View style={styles.trackerRow}>
+        <Section title="Status">
+          <View style={styles.statusRow}>
             <StadiumStatusButton
-              active={isVisited(stadium.id)}
+              active={visited}
               activeLabel="Besøgt"
               inactiveLabel="Markér besøgt"
-              onPress={() => toggleVisited(stadium.id)}
+              onPress={() => {
+                const nextVisited = !visited;
+                if (!nextVisited) {
+                  setVisitedDateInput("");
+                  clearVisited(stadium.id);
+                  return;
+                }
+
+                const value = visitedDateInput.trim();
+                setVisitedDate(stadium.id, value || null);
+              }}
               tone="visited"
             />
             <StadiumStatusButton
@@ -113,18 +104,25 @@ export default function StadiumDetailScreen() {
               tone="wishlist"
             />
           </View>
-          <View style={styles.visitDateBlock}>
-            <Text style={styles.visitDateLabel}>Besøgsdato</Text>
+
+          <Text style={styles.sectionBody}>
+            {visited
+              ? `Registreret som besøgt${visitedDate ? ` den ${visitedDate}` : ""}.`
+              : "Markér stadionet som besøgt, når du har været der."}
+          </Text>
+
+          <View style={styles.dateBlock}>
+            <Text style={styles.inputLabel}>Besøgsdato</Text>
             <TextInput
               onChangeText={setVisitedDateInput}
               placeholder="YYYY-MM-DD"
-              placeholderTextColor={colors.muted}
-              style={styles.visitDateInput}
+              placeholderTextColor="#737373"
+              style={styles.input}
               value={visitedDateInput}
             />
-            <View style={styles.visitDateActions}>
+            <View style={styles.actionRow}>
               <ActionButton
-                label="Gem besøg"
+                label="Gem dato"
                 onPress={() => setVisitedDate(stadium.id, visitedDateInput.trim() || null)}
               />
               <ActionButton
@@ -136,9 +134,9 @@ export default function StadiumDetailScreen() {
                 }}
                 secondary
               />
-              {isVisited(stadium.id) ? (
+              {visited ? (
                 <ActionButton
-                  label="Fjern besøg"
+                  label="Ryd"
                   onPress={() => {
                     setVisitedDateInput("");
                     clearVisited(stadium.id);
@@ -148,32 +146,61 @@ export default function StadiumDetailScreen() {
               ) : null}
             </View>
           </View>
-        </View>
+        </Section>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Datafundament</Text>
-          <Text style={styles.sectionText}>
-            Denne visning er bygget på samme typed datastruktur, som vi kan genbruge i en senere iOS-app. Det gør
-            det hurtigt at dele lister, detaljesider, filtrering og datakilder mellem platforme.
-          </Text>
-        </View>
+        <Section title="Stadiondata">
+          <View style={styles.table}>
+            {infoRows.map((row, index) => (
+              <View
+                key={row.label}
+                style={[
+                  styles.tableRow,
+                  index < infoRows.length - 1 ? styles.tableRowBorder : null,
+                ]}
+              >
+                <Text style={styles.tableLabel}>{row.label}</Text>
+                <Text style={styles.tableValue}>{row.value}</Text>
+              </View>
+            ))}
+          </View>
+        </Section>
 
-        <View style={styles.actions}>
+        <Section title="Om stadionet">
+          <Text style={styles.sectionBody}>{stadium.description}</Text>
+          {stadium.statusNote ? <Text style={styles.note}>{stadium.statusNote}</Text> : null}
+        </Section>
+
+        <Section title="Placering">
+          <Text style={styles.sectionBody}>{stadium.locationLabel}</Text>
+          <Text style={styles.coordinates}>{stadium.coordinatesLabel ?? "Koordinater kommer senere"}</Text>
+        </Section>
+
+        {stadium.tags.length ? (
+          <Section title="Tags">
+            <View style={styles.tagWrap}>
+              {stadium.tags.slice(0, 8).map((tag) => (
+                <View key={tag} style={styles.tag}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>
+              ))}
+            </View>
+          </Section>
+        ) : null}
+
+        <View style={styles.footerActions}>
           {mapUrl ? <ActionButton label="Åbn i kort" onPress={() => Linking.openURL(mapUrl)} /> : null}
-          {stadium.source ? (
-            <ActionButton label="Åbn kilde" onPress={() => Linking.openURL(stadium.source!)} secondary />
-          ) : null}
+          {stadium.source ? <ActionButton label="Åbn kilde" onPress={() => Linking.openURL(stadium.source!)} secondary /> : null}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function InfoCard({ label, value }: { label: string; value: string }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View style={styles.infoCard}>
-      <Text style={styles.infoLabel}>{label}</Text>
-      <Text style={styles.infoValue}>{value}</Text>
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
     </View>
   );
 }
@@ -205,7 +232,7 @@ function ActionButton({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: colors.paper,
+    backgroundColor: "#0A0A0A",
     flex: 1,
   },
   content: {
@@ -213,10 +240,11 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     paddingBottom: spacing.xl,
   },
-  heroCard: {
-    backgroundColor: colors.ink,
-    borderRadius: 28,
-    gap: spacing.sm,
+  hero: {
+    backgroundColor: "#111111",
+    borderColor: "#262626",
+    borderRadius: 20,
+    borderWidth: 1,
     padding: spacing.lg,
   },
   heroTopRow: {
@@ -224,88 +252,127 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     justifyContent: "space-between",
   },
-  heroTopText: {
+  heroTextWrap: {
     flex: 1,
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
-  heroEyebrow: {
-    color: colors.accentSoft,
-    fontSize: 13,
+  eyebrow: {
+    color: "#A3A3A3",
+    fontSize: 11,
     fontWeight: "800",
-    letterSpacing: 1.5,
+    letterSpacing: 1.4,
     textTransform: "uppercase",
   },
-  heroTitle: {
-    color: colors.white,
-    fontSize: 32,
-    fontWeight: "900",
-    lineHeight: 38,
+  title: {
+    color: "#FAFAFA",
+    fontSize: 28,
+    fontWeight: "800",
+    lineHeight: 32,
+    textTransform: "uppercase",
   },
-  heroSubtitle: {
-    color: "#F0E6DA",
-    fontSize: 17,
+  subtitle: {
+    color: "#E5E5E5",
+    fontSize: 18,
     fontWeight: "700",
   },
-  heroMeta: {
-    color: "#D2C7BA",
+  meta: {
+    color: "#A3A3A3",
     fontSize: 14,
   },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.md,
-  },
-  infoCard: {
-    backgroundColor: colors.card,
-    borderColor: colors.line,
-    borderRadius: 22,
+  section: {
+    backgroundColor: "#111111",
+    borderColor: "#262626",
+    borderRadius: 20,
     borderWidth: 1,
-    flexGrow: 1,
-    minWidth: 160,
+    gap: spacing.md,
     padding: spacing.md,
   },
-  infoLabel: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: "800",
-    textTransform: "uppercase",
-  },
-  infoValue: {
-    color: colors.ink,
-    fontSize: 22,
-    fontWeight: "800",
-    marginTop: 8,
-  },
-  section: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
-    borderRadius: 22,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.lg,
-  },
   sectionTitle: {
-    color: colors.ink,
-    fontSize: 22,
-    fontWeight: "800",
-  },
-  sectionText: {
-    color: colors.muted,
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  coordinates: {
-    color: colors.navy,
-    fontSize: 15,
+    color: "#FAFAFA",
+    fontSize: 20,
     fontWeight: "700",
   },
-  statusNote: {
-    backgroundColor: colors.paper,
+  sectionBody: {
+    color: "#D4D4D4",
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  statusRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  dateBlock: {
+    gap: spacing.sm,
+  },
+  inputLabel: {
+    color: "#A3A3A3",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+  },
+  input: {
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
+    borderRadius: 12,
+    borderWidth: 1,
+    color: "#FAFAFA",
+    fontSize: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+  },
+  actionRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  table: {
+    borderColor: "#2A2A2A",
     borderRadius: 16,
-    color: colors.ink,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  tableRow: {
+    alignItems: "center",
+    backgroundColor: "#111111",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.md,
+    paddingVertical: 14,
+  },
+  tableRowBorder: {
+    borderBottomColor: "#262626",
+    borderBottomWidth: 1,
+  },
+  tableLabel: {
+    color: "#A3A3A3",
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+  },
+  tableValue: {
+    color: "#FAFAFA",
+    flexShrink: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    paddingLeft: spacing.md,
+    textAlign: "right",
+  },
+  note: {
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
+    borderRadius: 12,
+    borderWidth: 1,
+    color: "#E5E5E5",
     fontSize: 14,
     lineHeight: 21,
     padding: spacing.md,
+  },
+  coordinates: {
+    color: "#FAFAFA",
+    fontSize: 14,
+    fontWeight: "600",
   },
   tagWrap: {
     flexDirection: "row",
@@ -313,80 +380,49 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   tag: {
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   tagText: {
-    color: colors.navy,
+    color: "#D4D4D4",
     fontSize: 12,
     fontWeight: "700",
   },
-  actions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.md,
-  },
-  trackerRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  visitDateBlock: {
-    gap: spacing.sm,
-    marginTop: spacing.md,
-  },
-  visitDateLabel: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: "800",
-    textTransform: "uppercase",
-  },
-  visitDateInput: {
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
-    borderRadius: 16,
-    borderWidth: 1,
-    color: colors.ink,
-    fontSize: 16,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 14,
-  },
-  visitDateActions: {
+  footerActions: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,
   },
   button: {
-    borderRadius: 18,
+    borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
   },
   buttonPrimary: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
+    backgroundColor: "#262626",
+    borderColor: "#404040",
   },
   buttonSecondary: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
   },
   buttonPressed: {
-    opacity: 0.88,
+    opacity: 0.86,
   },
   buttonLabel: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "800",
   },
   buttonLabelPrimary: {
-    color: colors.white,
+    color: "#FAFAFA",
   },
   buttonLabelSecondary: {
-    color: colors.ink,
+    color: "#D4D4D4",
   },
   missingState: {
     alignItems: "center",
@@ -395,17 +431,16 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   missingTitle: {
-    color: colors.ink,
-    fontSize: 26,
+    color: "#FAFAFA",
+    fontSize: 22,
     fontWeight: "800",
     textAlign: "center",
   },
   missingText: {
-    color: colors.muted,
-    fontSize: 16,
-    lineHeight: 24,
+    color: "#A3A3A3",
+    fontSize: 15,
+    lineHeight: 22,
     marginTop: spacing.sm,
-    maxWidth: 420,
     textAlign: "center",
   },
 });

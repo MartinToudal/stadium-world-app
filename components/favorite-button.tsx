@@ -1,7 +1,5 @@
 import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
 
-import { colors } from "../constants/theme";
-
 type FavoriteButtonProps = {
   active: boolean;
   onPress: (event?: GestureResponderEvent) => void;
@@ -18,8 +16,8 @@ export function FavoriteButton({ active, onPress }: FavoriteButtonProps) {
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    backgroundColor: colors.white,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 999,
     borderWidth: 1,
     height: 42,
@@ -27,17 +25,17 @@ const styles = StyleSheet.create({
     width: 42,
   },
   active: {
-    backgroundColor: "#FFF0D6",
-    borderColor: colors.accentSoft,
+    backgroundColor: "#262626",
+    borderColor: "#404040",
   },
   pressed: {
     opacity: 0.86,
   },
   icon: {
-    color: colors.muted,
+    color: "#A3A3A3",
     fontSize: 20,
   },
   activeIcon: {
-    color: colors.accent,
+    color: "#FAFAFA",
   },
 });
