@@ -65,8 +65,8 @@ export default function MapScreen() {
           <Text style={styles.eyebrow}>GEOGRAFI</Text>
           <Text style={styles.title}>Se stadioner efter region på et rigtigt koordinatkort.</Text>
           <Text style={styles.text}>
-            Webversionen viser stadionerne direkte på et koordinatkort, mens iPhone senere kan få en endnu stærkere
-            native map-oplevelse oven på samme data.
+            Få et hurtigt geografisk overblik over, hvor klubberne ligger, og hop direkte videre til de stadioner,
+            du vil udforske nærmere.
           </Text>
           <View style={styles.heroStats}>
             <StatCard inverted label="Region" value={region === "World" ? "Global" : region} />

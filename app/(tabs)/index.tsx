@@ -3,8 +3,8 @@ import { StadiumBrowser } from "../../components/stadium-browser";
 export default function ExploreScreen() {
   return (
     <StadiumBrowser
-      heroTitle="Et globalt stadionarkiv, klar til både web og iOS."
-      heroText="Start på web. Del data, navigation og UI-komponenter med den app, vi senere kan sende videre til iPhone."
+      heroTitle="Et globalt stadionarkiv for fans, groundhoppere og nysgerrige fodboldrejsende."
+      heroText="Find klubber og stadioner, filtrér på ligaer og lande, og byg dit eget overblik over steder du har besøgt eller stadig vil opleve."
       panelTitle="Find stadions"
     />
   );

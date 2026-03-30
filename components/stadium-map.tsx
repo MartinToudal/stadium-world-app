@@ -46,8 +46,7 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
         <View style={styles.headerText}>
           <Text style={styles.title}>Kortlag</Text>
           <Text style={styles.text}>
-            Webversionen viser nu stadionerne direkte på et koordinatkort, så du kan scanne geografi og hotspots uden
-            at vente på den native iOS-mapoplevelse.
+            Scan geografi og hotspots direkte fra kortet, og vælg hurtigt et stadion for at åbne detaljen.
           </Text>
         </View>
         <View style={styles.legend}>
