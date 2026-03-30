@@ -4,9 +4,9 @@ export default function SavedScreen() {
   return (
     <StadiumBrowser
       defaultCollectionFilter="all"
-      heroTitle="Byg din egen stadionhistorik med besøg, datoer og fremtidige mål."
-      heroText="Det vigtigste lige nu er overblik: hvilke stadioner du har været på, hvornår du var der, og hvilke der stadig står på listen."
-      panelTitle="Dine samlinger"
+      heroTitle="Hold styr på din egen stadionrejse."
+      heroText="Saml dine besøg, gem datoerne og få et klart overblik over hvilke stadioner der allerede er en del af din historie."
+      panelTitle="My Tour Directory"
       showCollectionFilters
       showTripPlanner
     />
