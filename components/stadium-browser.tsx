@@ -12,7 +12,7 @@ import {
   capacityBands,
   featuredLeagues,
   formatCapacity,
-  getLeagueRank,
+  getGlobalRank,
   matchesCapacityBand,
   stadiums,
   Stadium,
@@ -80,7 +80,7 @@ export function StadiumBrowser({
           `${stadium.team} ${stadium.stadiumName} ${stadium.city} ${stadium.country} ${stadium.league} ${stadium.aliases.join(" ")} ${stadium.tags.join(" ")}`.toLowerCase();
         return haystack.includes(trimmedQuery);
       })
-      .map((item) => ({ item, rank: getLeagueRank(item) }));
+      .map((item) => ({ item, rank: getGlobalRank(item) }));
 
     return filtered.sort((a, b) => {
       if (league !== "Alle") {
@@ -279,7 +279,7 @@ export function StadiumBrowser({
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.headerCell, styles.rankCell]}>Rank</Text>
+              <Text style={[styles.headerCell, styles.rankCell]}>Global Rank</Text>
               <Text style={[styles.headerCell, styles.teamCell]}>Team</Text>
               <Text style={[styles.headerCell, styles.metaCell]}>Stadium</Text>
               <Text style={[styles.headerCell, styles.metaCell]}>City</Text>
