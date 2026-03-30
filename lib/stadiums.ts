@@ -183,6 +183,9 @@ export const featuredCountries = [
 export const allCountries = [...new Set(stadiums.map((stadium) => stadium.country))].sort((a, b) =>
   a.localeCompare(b)
 );
+export const allLeagues = [...new Set(stadiums.map((stadium) => stadium.league))].sort((a, b) =>
+  a.localeCompare(b)
+);
 
 export const featuredRegions = ["World", "Europe", "North America", "South America", "Middle East"];
 export const capacityBands = ["Alle", "60k+", "40k+", "20k+", "<20k"] as const;

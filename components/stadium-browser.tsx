@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing } from "../constants/theme";
 import { useStadiumCollections } from "../lib/favorites";
 import {
+  allLeagues,
   allCountries,
   capacityBands,
   featuredLeagues,
@@ -42,7 +43,8 @@ export function StadiumBrowser({
   showTripPlanner = false,
 }: StadiumBrowserProps) {
   const [query, setQuery] = useState("");
-  const [league, setLeague] = useState<string>(featuredLeagues[0]);
+  const [league, setLeague] = useState<string>("Alle");
+  const [leagueMenuOpen, setLeagueMenuOpen] = useState(false);
   const [country, setCountry] = useState<string>("Alle");
   const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
@@ -93,8 +95,11 @@ export function StadiumBrowser({
         }
       }
 
+      const aLeagueIndex = featuredLeagues.indexOf(a.item.league);
+      const bLeagueIndex = featuredLeagues.indexOf(b.item.league);
       const leagueOrder =
-        featuredLeagues.indexOf(a.item.league) - featuredLeagues.indexOf(b.item.league);
+        (aLeagueIndex === -1 ? Number.MAX_SAFE_INTEGER : aLeagueIndex) -
+        (bLeagueIndex === -1 ? Number.MAX_SAFE_INTEGER : bLeagueIndex);
 
       if (league === "Alle" && leagueOrder !== 0) {
         return leagueOrder;
@@ -106,7 +111,7 @@ export function StadiumBrowser({
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
           <Text style={styles.eyebrow}>STADIUM DIRECTORY</Text>
@@ -135,18 +140,65 @@ export function StadiumBrowser({
             value={query}
           />
 
-          <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-            {featuredLeagues.map((option) => (
-              <FilterChip active={league === option} key={option} label={option} onPress={() => setLeague(option)} />
-            ))}
-          </ScrollView>
-
           <View style={styles.filterGrid}>
+            <View style={styles.filterColumn}>
+              <Text style={styles.filterLabel}>League</Text>
+              <View style={styles.dropdownWrap}>
+                <Pressable
+                  onPress={() => {
+                    setLeagueMenuOpen((value) => !value);
+                    setCountryMenuOpen(false);
+                  }}
+                  style={({ pressed }) => [
+                    styles.dropdownTrigger,
+                    leagueMenuOpen && styles.dropdownTriggerOpen,
+                    pressed && styles.dropdownTriggerPressed,
+                  ]}
+                >
+                  <Text style={styles.dropdownValue}>{league}</Text>
+                  <Text style={styles.dropdownIcon}>{leagueMenuOpen ? "▴" : "▾"}</Text>
+                </Pressable>
+
+                {leagueMenuOpen ? (
+                  <View style={styles.dropdownMenu}>
+                    <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
+                      {["Alle", ...allLeagues].map((option) => (
+                        <Pressable
+                          key={option}
+                          onPress={() => {
+                            setLeague(option);
+                            setLeagueMenuOpen(false);
+                          }}
+                          style={({ pressed }) => [
+                            styles.dropdownOption,
+                            league === option && styles.dropdownOptionActive,
+                            pressed && styles.dropdownOptionPressed,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.dropdownOptionText,
+                              league === option && styles.dropdownOptionTextActive,
+                            ]}
+                          >
+                            {option}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+
             <View style={styles.filterColumn}>
               <Text style={styles.filterLabel}>Country</Text>
               <View style={styles.dropdownWrap}>
                 <Pressable
-                  onPress={() => setCountryMenuOpen((value) => !value)}
+                  onPress={() => {
+                    setCountryMenuOpen((value) => !value);
+                    setLeagueMenuOpen(false);
+                  }}
                   style={({ pressed }) => [
                     styles.dropdownTrigger,
                     countryMenuOpen && styles.dropdownTriggerOpen,
@@ -291,7 +343,7 @@ export function StadiumBrowser({
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: "#F7F6F4",
+    backgroundColor: "#0A0A0A",
     flex: 1,
   },
   content: {
@@ -300,35 +352,35 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   hero: {
-    backgroundColor: colors.white,
-    borderColor: "#E0DCE6",
+    backgroundColor: "#111111",
+    borderColor: "#262626",
     borderRadius: 20,
     borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.lg,
   },
   eyebrow: {
-    color: "#5E5371",
+    color: "#A3A3A3",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.8,
     textTransform: "uppercase",
   },
   heroTitle: {
-    color: "#241B39",
-    fontSize: 32,
-    fontWeight: "900",
-    lineHeight: 36,
+    color: "#FAFAFA",
+    fontSize: 30,
+    fontWeight: "800",
+    lineHeight: 34,
   },
   heroText: {
-    color: "#6B6377",
+    color: "#A3A3A3",
     fontSize: 15,
     lineHeight: 22,
     maxWidth: 780,
   },
   panel: {
-    backgroundColor: colors.white,
-    borderColor: "#DDD8E2",
+    backgroundColor: "#111111",
+    borderColor: "#262626",
     borderRadius: 20,
     borderWidth: 1,
     gap: spacing.md,
@@ -340,21 +392,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   panelEyebrow: {
-    color: "#8B8594",
+    color: "#737373",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.2,
     textTransform: "uppercase",
   },
   panelTitle: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 24,
-    fontWeight: "900",
+    fontWeight: "700",
     marginTop: 4,
   },
   countBadge: {
     alignItems: "center",
-    backgroundColor: "#241B39",
+    backgroundColor: "#262626",
     borderRadius: 12,
     height: 42,
     justifyContent: "center",
@@ -362,16 +414,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   countBadgeText: {
-    color: colors.white,
+    color: "#FAFAFA",
     fontSize: 15,
-    fontWeight: "900",
+    fontWeight: "800",
   },
   searchInput: {
-    backgroundColor: "#F5F3F6",
-    borderColor: "#D9D3DE",
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 12,
     borderWidth: 1,
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 14,
     paddingHorizontal: 14,
     paddingVertical: 14,
@@ -387,7 +439,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   filterLabel: {
-    color: "#8B8594",
+    color: "#737373",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.1,
@@ -402,8 +454,8 @@ const styles = StyleSheet.create({
   },
   dropdownTrigger: {
     alignItems: "center",
-    backgroundColor: "#F5F3F6",
-    borderColor: "#D9D3DE",
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: "row",
@@ -412,24 +464,24 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   dropdownTriggerOpen: {
-    borderColor: "#241B39",
+    borderColor: "#525252",
   },
   dropdownTriggerPressed: {
     opacity: 0.9,
   },
   dropdownValue: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 14,
     fontWeight: "700",
   },
   dropdownIcon: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 16,
     fontWeight: "800",
   },
   dropdownMenu: {
-    backgroundColor: colors.white,
-    borderColor: "#D9D3DE",
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 12,
     borderWidth: 1,
     maxHeight: 240,
@@ -439,42 +491,42 @@ const styles = StyleSheet.create({
     maxHeight: 240,
   },
   dropdownOption: {
-    borderTopColor: "#F0ECF3",
+    borderTopColor: "#262626",
     borderTopWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
   dropdownOptionActive: {
-    backgroundColor: "#241B39",
+    backgroundColor: "#262626",
   },
   dropdownOptionPressed: {
     opacity: 0.9,
   },
   dropdownOptionText: {
-    color: "#241B39",
+    color: "#E5E5E5",
     fontSize: 14,
     fontWeight: "600",
   },
   dropdownOptionTextActive: {
-    color: colors.white,
+    color: "#FAFAFA",
   },
   table: {
-    borderColor: "#D9D3DE",
+    borderColor: "#2A2A2A",
     borderRadius: 16,
     borderWidth: 1,
     overflow: "hidden",
   },
   tableHeader: {
     alignItems: "center",
-    backgroundColor: colors.white,
-    borderBottomColor: "#2C2242",
+    backgroundColor: "#111111",
+    borderBottomColor: "#2A2A2A",
     borderBottomWidth: 1,
     flexDirection: "row",
     minHeight: 54,
     paddingHorizontal: 12,
   },
   headerCell: {
-    color: "#8B8594",
+    color: "#737373",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1,
@@ -487,10 +539,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   rowLight: {
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#141414",
   },
   rowWhite: {
-    backgroundColor: colors.white,
+    backgroundColor: "#101010",
   },
   rowPressed: {
     opacity: 0.86,
@@ -513,50 +565,50 @@ const styles = StyleSheet.create({
     minWidth: 100,
   },
   rankValue: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 18,
-    fontWeight: "900",
+    fontWeight: "800",
   },
   teamName: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 16,
-    fontWeight: "900",
+    fontWeight: "800",
     lineHeight: 20,
     textTransform: "uppercase",
   },
   teamMeta: {
-    color: "#7D7687",
+    color: "#A3A3A3",
     fontSize: 11,
     fontWeight: "700",
     marginTop: 2,
   },
   metaValue: {
-    color: "#463B58",
+    color: "#D4D4D4",
     fontSize: 14,
     fontWeight: "600",
   },
   statusText: {
-    color: "#7D7687",
+    color: "#A3A3A3",
     fontSize: 13,
     fontWeight: "700",
   },
   statusTextStrong: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 13,
     fontWeight: "800",
   },
   emptyState: {
-    backgroundColor: colors.white,
+    backgroundColor: "#111111",
     padding: spacing.xl,
   },
   emptyTitle: {
-    color: "#241B39",
+    color: "#FAFAFA",
     fontSize: 18,
     fontWeight: "800",
     textAlign: "center",
   },
   emptyText: {
-    color: "#7D7687",
+    color: "#A3A3A3",
     fontSize: 14,
     lineHeight: 20,
     marginTop: spacing.sm,

@@ -31,18 +31,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   activeChip: {
-    backgroundColor: colors.ink,
-    borderColor: colors.ink,
+    backgroundColor: "#262626",
+    borderColor: "#404040",
   },
   inactiveChip: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
   },
   activeLabel: {
-    color: colors.white,
+    color: "#FAFAFA",
   },
   inactiveLabel: {
-    color: colors.ink,
+    color: "#D4D4D4",
   },
   label: {
     fontSize: 13,
