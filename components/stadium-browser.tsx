@@ -4,7 +4,7 @@ import { useDeferredValue, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { colors, spacing } from "../constants/theme";
+import { spacing } from "../constants/theme";
 import { useStadiumCollections } from "../lib/favorites";
 import {
   allLeagues,
@@ -34,6 +34,9 @@ type StadiumRow = {
   rank: number | null;
 };
 
+type SortKey = "rank" | "team" | "stadium" | "city" | "visit";
+type SortDirection = "asc" | "desc";
+
 export function StadiumBrowser({
   defaultCollectionFilter = "all",
   heroTitle,
@@ -43,6 +46,8 @@ export function StadiumBrowser({
   showTripPlanner = false,
 }: StadiumBrowserProps) {
   const [query, setQuery] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("rank");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [league, setLeague] = useState<string>("Alle");
   const [leagueMenuOpen, setLeagueMenuOpen] = useState(false);
   const [country, setCountry] = useState<string>("Alle");
@@ -83,16 +88,30 @@ export function StadiumBrowser({
       .map((item) => ({ item, rank: getGlobalRank(item) }));
 
     return filtered.sort((a, b) => {
-      if (league !== "Alle") {
-        if (a.rank != null && b.rank != null) {
-          return a.rank - b.rank;
+      const aVisitValue = getVisitSortValue(a.item.id, isVisited(a.item.id), isWishlisted(a.item.id), getVisitedDate(a.item.id));
+      const bVisitValue = getVisitSortValue(b.item.id, isVisited(b.item.id), isWishlisted(b.item.id), getVisitedDate(b.item.id));
+
+      const compareByKey = (() => {
+        switch (sortKey) {
+          case "team":
+            return a.item.team.localeCompare(b.item.team);
+          case "stadium":
+            return a.item.stadiumName.localeCompare(b.item.stadiumName);
+          case "city":
+            return a.item.city.localeCompare(b.item.city);
+          case "visit":
+            return aVisitValue.localeCompare(bVisitValue);
+          case "rank":
+          default: {
+            const aRank = a.rank ?? Number.MAX_SAFE_INTEGER;
+            const bRank = b.rank ?? Number.MAX_SAFE_INTEGER;
+            return aRank - bRank;
+          }
         }
-        if (a.rank != null) {
-          return -1;
-        }
-        if (b.rank != null) {
-          return 1;
-        }
+      })();
+
+      if (compareByKey !== 0) {
+        return sortDirection === "asc" ? compareByKey : -compareByKey;
       }
 
       const aLeagueIndex = featuredLeagues.indexOf(a.item.league);
@@ -101,13 +120,37 @@ export function StadiumBrowser({
         (aLeagueIndex === -1 ? Number.MAX_SAFE_INTEGER : aLeagueIndex) -
         (bLeagueIndex === -1 ? Number.MAX_SAFE_INTEGER : bLeagueIndex);
 
-      if (league === "Alle" && leagueOrder !== 0) {
+      if (leagueOrder !== 0) {
         return leagueOrder;
       }
 
       return a.item.team.localeCompare(b.item.team);
     });
-  }, [capacityBand, collectionFilter, country, deferredQuery, favorites, league, visited, wishlist]);
+  }, [
+    capacityBand,
+    collectionFilter,
+    country,
+    deferredQuery,
+    favorites,
+    getVisitedDate,
+    isVisited,
+    isWishlisted,
+    league,
+    sortDirection,
+    sortKey,
+    visited,
+    wishlist,
+  ]);
+
+  function handleSort(nextKey: SortKey) {
+    if (sortKey === nextKey) {
+      setSortDirection((value) => (value === "asc" ? "desc" : "asc"));
+      return;
+    }
+
+    setSortKey(nextKey);
+    setSortDirection(nextKey === "rank" ? "asc" : "asc");
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -279,11 +322,41 @@ export function StadiumBrowser({
 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.headerCell, styles.rankCell]}>Global Rank</Text>
-              <Text style={[styles.headerCell, styles.teamCell]}>Team</Text>
-              <Text style={[styles.headerCell, styles.metaCell]}>Stadium</Text>
-              <Text style={[styles.headerCell, styles.metaCell]}>City</Text>
-              <Text style={[styles.headerCell, styles.statusCell]}>Visit</Text>
+              <SortableHeader
+                active={sortKey === "rank"}
+                direction={sortDirection}
+                label="Global Rank"
+                onPress={() => handleSort("rank")}
+                style={styles.rankCell}
+              />
+              <SortableHeader
+                active={sortKey === "team"}
+                direction={sortDirection}
+                label="Team"
+                onPress={() => handleSort("team")}
+                style={styles.teamCell}
+              />
+              <SortableHeader
+                active={sortKey === "stadium"}
+                direction={sortDirection}
+                label="Stadium"
+                onPress={() => handleSort("stadium")}
+                style={styles.metaCell}
+              />
+              <SortableHeader
+                active={sortKey === "city"}
+                direction={sortDirection}
+                label="City"
+                onPress={() => handleSort("city")}
+                style={styles.metaCell}
+              />
+              <SortableHeader
+                active={sortKey === "visit"}
+                direction={sortDirection}
+                label="Visit"
+                onPress={() => handleSort("visit")}
+                style={styles.statusCell}
+              />
             </View>
 
             {rows.length ? (
@@ -338,6 +411,39 @@ export function StadiumBrowser({
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function getVisitSortValue(id: string, visited: boolean, wishlisted: boolean, visitedDate: string | null) {
+  if (visited) {
+    return `0-${visitedDate ?? "9999-99-99"}-${id}`;
+  }
+
+  if (wishlisted) {
+    return `1-${id}`;
+  }
+
+  return `2-${id}`;
+}
+
+function SortableHeader({
+  active,
+  direction,
+  label,
+  onPress,
+  style,
+}: {
+  active: boolean;
+  direction: SortDirection;
+  label: string;
+  onPress: () => void;
+  style: object;
+}) {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.headerButton, style, pressed && styles.headerPressed]}>
+      <Text style={[styles.headerCell, active && styles.headerCellActive]}>{label}</Text>
+      <Text style={[styles.headerArrow, active && styles.headerArrowActive]}>{active ? (direction === "asc" ? "↑" : "↓") : "↕"}</Text>
+    </Pressable>
   );
 }
 
@@ -525,12 +631,32 @@ const styles = StyleSheet.create({
     minHeight: 54,
     paddingHorizontal: 12,
   },
+  headerButton: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    minHeight: 54,
+  },
+  headerPressed: {
+    opacity: 0.82,
+  },
   headerCell: {
     color: "#737373",
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1,
     textTransform: "uppercase",
+  },
+  headerCellActive: {
+    color: "#FAFAFA",
+  },
+  headerArrow: {
+    color: "#525252",
+    fontSize: 11,
+    fontWeight: "800",
+  },
+  headerArrowActive: {
+    color: "#FAFAFA",
   },
   tableRow: {
     alignItems: "center",
