@@ -1,17 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { useDeferredValue, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { useStadiumCollections } from "../lib/favorites";
 import {
-  allLeagues,
   allCountries,
+  allLeagues,
   capacityBands,
   featuredLeagues,
-  formatCapacity,
   getGlobalRank,
   matchesCapacityBand,
   stadiums,
@@ -29,13 +28,15 @@ type StadiumBrowserProps = {
   showTripPlanner?: boolean;
 };
 
+type SortKey = "rank" | "team" | "stadium" | "city" | "visit";
+type SortDirection = "asc" | "desc";
+
 type StadiumRow = {
   item: Stadium;
   rank: number | null;
+  visitValue: string;
+  visitLabel: string;
 };
-
-type SortKey = "rank" | "team" | "stadium" | "city" | "visit";
-type SortDirection = "asc" | "desc";
 
 export function StadiumBrowser({
   defaultCollectionFilter = "all",
@@ -48,14 +49,15 @@ export function StadiumBrowser({
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [league, setLeague] = useState<string>("Alle");
-  const [leagueMenuOpen, setLeagueMenuOpen] = useState(false);
-  const [country, setCountry] = useState<string>("Alle");
-  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
+  const [league, setLeague] = useState("Alle");
+  const [country, setCountry] = useState("Alle");
   const [capacityBand, setCapacityBand] = useState<(typeof capacityBands)[number]>("Alle");
   const [collectionFilter, setCollectionFilter] = useState(defaultCollectionFilter);
-  const { favorites, visited, wishlist, isFavorite, isVisited, isWishlisted, getVisitedDate } = useStadiumCollections();
+  const [leagueMenuOpen, setLeagueMenuOpen] = useState(false);
+  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const deferredQuery = useDeferredValue(query);
+
+  const { favorites, visited, wishlist, isFavorite, isVisited, isWishlisted, getVisitedDate } = useStadiumCollections();
 
   const rows = useMemo<StadiumRow[]>(() => {
     const trimmedQuery = deferredQuery.trim().toLowerCase();
@@ -85,13 +87,21 @@ export function StadiumBrowser({
           `${stadium.team} ${stadium.stadiumName} ${stadium.city} ${stadium.country} ${stadium.league} ${stadium.aliases.join(" ")} ${stadium.tags.join(" ")}`.toLowerCase();
         return haystack.includes(trimmedQuery);
       })
-      .map((item) => ({ item, rank: getGlobalRank(item) }));
+      .map((item) => {
+        const visitedState = isVisited(item.id);
+        const wishlisted = isWishlisted(item.id);
+        const visitedDate = getVisitedDate(item.id);
+
+        return {
+          item,
+          rank: getGlobalRank(item),
+          visitValue: getVisitSortValue(item.id, visitedState, wishlisted, visitedDate),
+          visitLabel: getVisitLabel(item.id, visitedState, wishlisted, isFavorite(item.id), visitedDate),
+        };
+      });
 
     return filtered.sort((a, b) => {
-      const aVisitValue = getVisitSortValue(a.item.id, isVisited(a.item.id), isWishlisted(a.item.id), getVisitedDate(a.item.id));
-      const bVisitValue = getVisitSortValue(b.item.id, isVisited(b.item.id), isWishlisted(b.item.id), getVisitedDate(b.item.id));
-
-      const compareByKey = (() => {
+      const compare = (() => {
         switch (sortKey) {
           case "team":
             return a.item.team.localeCompare(b.item.team);
@@ -100,18 +110,15 @@ export function StadiumBrowser({
           case "city":
             return a.item.city.localeCompare(b.item.city);
           case "visit":
-            return aVisitValue.localeCompare(bVisitValue);
+            return a.visitValue.localeCompare(b.visitValue);
           case "rank":
-          default: {
-            const aRank = a.rank ?? Number.MAX_SAFE_INTEGER;
-            const bRank = b.rank ?? Number.MAX_SAFE_INTEGER;
-            return aRank - bRank;
-          }
+          default:
+            return (a.rank ?? Number.MAX_SAFE_INTEGER) - (b.rank ?? Number.MAX_SAFE_INTEGER);
         }
       })();
 
-      if (compareByKey !== 0) {
-        return sortDirection === "asc" ? compareByKey : -compareByKey;
+      if (compare !== 0) {
+        return sortDirection === "asc" ? compare : -compare;
       }
 
       const aLeagueIndex = featuredLeagues.indexOf(a.item.league);
@@ -133,6 +140,7 @@ export function StadiumBrowser({
     deferredQuery,
     favorites,
     getVisitedDate,
+    isFavorite,
     isVisited,
     isWishlisted,
     league,
@@ -142,6 +150,17 @@ export function StadiumBrowser({
     wishlist,
   ]);
 
+  const stats = useMemo(() => {
+    const countries = new Set(rows.map((row) => row.item.country)).size;
+    const leagues = new Set(rows.map((row) => row.item.league)).size;
+    return [
+      { label: "Clubs", value: String(rows.length) },
+      { label: "Countries", value: String(countries) },
+      { label: "Visited", value: String(visited.length) },
+      { label: "Leagues", value: String(leagues) },
+    ];
+  }, [rows, visited.length]);
+
   function handleSort(nextKey: SortKey) {
     if (sortKey === nextKey) {
       setSortDirection((value) => (value === "asc" ? "desc" : "asc"));
@@ -149,144 +168,72 @@ export function StadiumBrowser({
     }
 
     setSortKey(nextKey);
-    setSortDirection(nextKey === "rank" ? "asc" : "asc");
+    setSortDirection("asc");
   }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.hero}>
-          <Text style={styles.eyebrow}>STADIUM DIRECTORY</Text>
-          <Text style={styles.heroTitle}>{heroTitle}</Text>
-          <Text style={styles.heroText}>{heroText}</Text>
+        <View style={styles.pageHeader}>
+          <Text style={styles.pageEyebrow}>Explore</Text>
+          <Text style={styles.pageTitle}>{heroTitle}</Text>
+          <Text style={styles.pageText}>{heroText}</Text>
+        </View>
+
+        <View style={styles.statsRow}>
+          {stats.map((stat) => (
+            <View key={stat.label} style={styles.statCard}>
+              <Text style={styles.statValue}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
+            </View>
+          ))}
         </View>
 
         {showTripPlanner ? <TripPlannerPanel /> : null}
 
-        <View style={styles.panel}>
-          <View style={styles.panelHeader}>
-            <View>
-              <Text style={styles.panelEyebrow}>League Table</Text>
-              <Text style={styles.panelTitle}>{panelTitle}</Text>
+        <View style={styles.directoryShell}>
+          <View style={styles.directoryHeader}>
+            <View style={styles.directoryHeaderText}>
+              <Text style={styles.directoryEyebrow}>Directory</Text>
+              <Text style={styles.directoryTitle}>{panelTitle}</Text>
             </View>
-            <View style={styles.countBadge}>
-              <Text style={styles.countBadgeText}>{rows.length}</Text>
+            <View style={styles.directoryCount}>
+              <Text style={styles.directoryCountValue}>{rows.length}</Text>
             </View>
           </View>
 
           <TextInput
             onChangeText={setQuery}
-            placeholder="Start typing to see suggestions"
-            placeholderTextColor="#A09AA4"
+            placeholder="Search club, stadium, city or country"
+            placeholderTextColor={colors.textMuted}
             style={styles.searchInput}
             value={query}
           />
 
-          <View style={styles.filterGrid}>
-            <View style={styles.filterColumn}>
-              <Text style={styles.filterLabel}>League</Text>
-              <View style={styles.dropdownWrap}>
-                <Pressable
-                  onPress={() => {
-                    setLeagueMenuOpen((value) => !value);
-                    setCountryMenuOpen(false);
-                  }}
-                  style={({ pressed }) => [
-                    styles.dropdownTrigger,
-                    leagueMenuOpen && styles.dropdownTriggerOpen,
-                    pressed && styles.dropdownTriggerPressed,
-                  ]}
-                >
-                  <Text style={styles.dropdownValue}>{league}</Text>
-                  <Text style={styles.dropdownIcon}>{leagueMenuOpen ? "▴" : "▾"}</Text>
-                </Pressable>
+          <View style={styles.toolbar}>
+            <FilterSelect
+              label="League"
+              onSelect={(option) => setLeague(option)}
+              open={leagueMenuOpen}
+              options={["Alle", ...allLeagues]}
+              setOpen={setLeagueMenuOpen}
+              value={league}
+            />
+            <FilterSelect
+              label="Country"
+              onSelect={(option) => setCountry(option)}
+              open={countryMenuOpen}
+              options={["Alle", ...allCountries]}
+              setOpen={setCountryMenuOpen}
+              value={country}
+            />
+          </View>
 
-                {leagueMenuOpen ? (
-                  <View style={styles.dropdownMenu}>
-                    <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
-                      {["Alle", ...allLeagues].map((option) => (
-                        <Pressable
-                          key={option}
-                          onPress={() => {
-                            setLeague(option);
-                            setLeagueMenuOpen(false);
-                          }}
-                          style={({ pressed }) => [
-                            styles.dropdownOption,
-                            league === option && styles.dropdownOptionActive,
-                            pressed && styles.dropdownOptionPressed,
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              styles.dropdownOptionText,
-                              league === option && styles.dropdownOptionTextActive,
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </Pressable>
-                      ))}
-                    </ScrollView>
-                  </View>
-                ) : null}
-              </View>
-            </View>
-
-            <View style={styles.filterColumn}>
-              <Text style={styles.filterLabel}>Country</Text>
-              <View style={styles.dropdownWrap}>
-                <Pressable
-                  onPress={() => {
-                    setCountryMenuOpen((value) => !value);
-                    setLeagueMenuOpen(false);
-                  }}
-                  style={({ pressed }) => [
-                    styles.dropdownTrigger,
-                    countryMenuOpen && styles.dropdownTriggerOpen,
-                    pressed && styles.dropdownTriggerPressed,
-                  ]}
-                >
-                  <Text style={styles.dropdownValue}>{country}</Text>
-                  <Text style={styles.dropdownIcon}>{countryMenuOpen ? "▴" : "▾"}</Text>
-                </Pressable>
-
-                {countryMenuOpen ? (
-                  <View style={styles.dropdownMenu}>
-                    <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
-                      {["Alle", ...allCountries].map((option) => (
-                        <Pressable
-                          key={option}
-                          onPress={() => {
-                            setCountry(option);
-                            setCountryMenuOpen(false);
-                          }}
-                          style={({ pressed }) => [
-                            styles.dropdownOption,
-                            country === option && styles.dropdownOptionActive,
-                            pressed && styles.dropdownOptionPressed,
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              styles.dropdownOptionText,
-                              country === option && styles.dropdownOptionTextActive,
-                            ]}
-                          >
-                            {option}
-                          </Text>
-                        </Pressable>
-                      ))}
-                    </ScrollView>
-                  </View>
-                ) : null}
-              </View>
-            </View>
-
-            <View style={styles.filterColumn}>
+          <View style={styles.filterStrip}>
+            <View style={styles.filterBlock}>
               <Text style={styles.filterLabel}>Capacity</Text>
-              <ScrollView contentContainerStyle={styles.miniChipRow} horizontal showsHorizontalScrollIndicator={false}>
+              <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
                 {capacityBands.map((option) => (
                   <FilterChip
                     active={capacityBand === option}
@@ -297,35 +244,38 @@ export function StadiumBrowser({
                 ))}
               </ScrollView>
             </View>
+
+            {showCollectionFilters ? (
+              <View style={styles.filterBlock}>
+                <Text style={styles.filterLabel}>Collection</Text>
+                <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
+                  <FilterChip active={collectionFilter === "all"} label="All" onPress={() => setCollectionFilter("all")} />
+                  <FilterChip
+                    active={collectionFilter === "favorites"}
+                    label={`Favorites (${favorites.length})`}
+                    onPress={() => setCollectionFilter("favorites")}
+                  />
+                  <FilterChip
+                    active={collectionFilter === "visited"}
+                    label={`Visited (${visited.length})`}
+                    onPress={() => setCollectionFilter("visited")}
+                  />
+                  <FilterChip
+                    active={collectionFilter === "wishlist"}
+                    label={`Wishlist (${wishlist.length})`}
+                    onPress={() => setCollectionFilter("wishlist")}
+                  />
+                </ScrollView>
+              </View>
+            ) : null}
           </View>
 
-          {showCollectionFilters ? (
-            <ScrollView contentContainerStyle={styles.chipRow} horizontal showsHorizontalScrollIndicator={false}>
-              <FilterChip active={collectionFilter === "all"} label="All" onPress={() => setCollectionFilter("all")} />
-              <FilterChip
-                active={collectionFilter === "favorites"}
-                label={`Favorites (${favorites.length})`}
-                onPress={() => setCollectionFilter("favorites")}
-              />
-              <FilterChip
-                active={collectionFilter === "visited"}
-                label={`Visited (${visited.length})`}
-                onPress={() => setCollectionFilter("visited")}
-              />
-              <FilterChip
-                active={collectionFilter === "wishlist"}
-                label={`Wishlist (${wishlist.length})`}
-                onPress={() => setCollectionFilter("wishlist")}
-              />
-            </ScrollView>
-          ) : null}
-
-          <View style={styles.table}>
+          <View style={styles.tableWrap}>
             <View style={styles.tableHeader}>
               <SortableHeader
                 active={sortKey === "rank"}
                 direction={sortDirection}
-                label="Global Rank"
+                label="Rank"
                 onPress={() => handleSort("rank")}
                 style={styles.rankCell}
               />
@@ -341,70 +291,55 @@ export function StadiumBrowser({
                 direction={sortDirection}
                 label="Stadium"
                 onPress={() => handleSort("stadium")}
-                style={styles.metaCell}
+                style={styles.stadiumCell}
               />
               <SortableHeader
                 active={sortKey === "city"}
                 direction={sortDirection}
                 label="City"
                 onPress={() => handleSort("city")}
-                style={styles.metaCell}
+                style={styles.cityCell}
               />
               <SortableHeader
                 active={sortKey === "visit"}
                 direction={sortDirection}
-                label="Visit"
+                label="Status"
                 onPress={() => handleSort("visit")}
-                style={styles.statusCell}
+                style={styles.visitCell}
               />
             </View>
 
             {rows.length ? (
-              rows.map(({ item, rank }, index) => {
-                const favorite = isFavorite(item.id);
-                const visitedState = isVisited(item.id);
-                const wishlisted = isWishlisted(item.id);
-                const visitedDate = getVisitedDate(item.id);
-
-                return (
-                  <Pressable
-                    key={item.id}
-                    onPress={() => router.push(`/stadium/${item.id}`)}
-                    style={({ pressed }) => [
-                      styles.tableRow,
-                      index % 2 === 0 ? styles.rowLight : styles.rowWhite,
-                      pressed && styles.rowPressed,
-                    ]}
-                  >
-                    <Text style={[styles.rowCell, styles.rankCell, styles.rankValue]}>{rank ?? "-"}</Text>
-                    <View style={[styles.rowCell, styles.teamCell]}>
-                      <Text style={styles.teamName}>{item.team}</Text>
-                      <Text style={styles.teamMeta}>{item.league}</Text>
-                    </View>
-                    <Text style={[styles.rowCell, styles.metaCell, styles.metaValue]} numberOfLines={2}>
-                      {item.stadiumName}
-                    </Text>
-                    <Text style={[styles.rowCell, styles.metaCell, styles.metaValue]} numberOfLines={1}>
-                      {item.city}
-                    </Text>
-                    <View style={[styles.rowCell, styles.statusCell]}>
-                      {visitedState ? (
-                        <Text style={styles.statusTextStrong}>{visitedDate ?? "Visited"}</Text>
-                      ) : wishlisted ? (
-                        <Text style={styles.statusText}>Wishlist</Text>
-                      ) : favorite ? (
-                        <Text style={styles.statusText}>Saved</Text>
-                      ) : (
-                        <Text style={styles.statusText}>Open</Text>
-                      )}
-                    </View>
-                  </Pressable>
-                );
-              })
+              rows.map((row, index) => (
+                <Pressable
+                  key={row.item.id}
+                  onPress={() => router.push(`/stadium/${row.item.id}`)}
+                  style={({ pressed }) => [
+                    styles.tableRow,
+                    index < rows.length - 1 && styles.tableRowBorder,
+                    pressed && styles.tableRowPressed,
+                  ]}
+                >
+                  <Text style={[styles.rowText, styles.rankCell, styles.rankValue]}>{row.rank ?? "-"}</Text>
+                  <View style={[styles.teamCell, styles.rowCell]}>
+                    <Text style={styles.teamName}>{row.item.team}</Text>
+                    <Text style={styles.teamLeague}>{row.item.league}</Text>
+                  </View>
+                  <Text numberOfLines={1} style={[styles.rowText, styles.stadiumCell, styles.primaryValue]}>
+                    {row.item.stadiumName}
+                  </Text>
+                  <Text numberOfLines={1} style={[styles.rowText, styles.cityCell, styles.secondaryValue]}>
+                    {row.item.city}
+                  </Text>
+                  <Text numberOfLines={1} style={[styles.rowText, styles.visitCell, styles.visitValue]}>
+                    {row.visitLabel}
+                  </Text>
+                </Pressable>
+              ))
             ) : (
               <View style={styles.emptyState}>
-                <Text style={styles.emptyTitle}>No clubs match the current filters</Text>
-                <Text style={styles.emptyText}>Try another league, country or search term.</Text>
+                <Text style={styles.emptyTitle}>No stadiums match the current filters</Text>
+                <Text style={styles.emptyText}>Try another search, league or country selection.</Text>
               </View>
             )}
           </View>
@@ -426,6 +361,22 @@ function getVisitSortValue(id: string, visited: boolean, wishlisted: boolean, vi
   return `2-${id}`;
 }
 
+function getVisitLabel(id: string, visited: boolean, wishlisted: boolean, favorite: boolean, visitedDate: string | null) {
+  if (visited) {
+    return visitedDate ? `Visited ${visitedDate}` : "Visited";
+  }
+
+  if (wishlisted) {
+    return "Wishlist";
+  }
+
+  if (favorite) {
+    return "Saved";
+  }
+
+  return "Open";
+}
+
 function SortableHeader({
   active,
   direction,
@@ -437,19 +388,73 @@ function SortableHeader({
   direction: SortDirection;
   label: string;
   onPress: () => void;
-  style: object;
+  style: ViewStyle;
 }) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.headerButton, style, pressed && styles.headerPressed]}>
-      <Text style={[styles.headerCell, active && styles.headerCellActive]}>{label}</Text>
+      <Text style={[styles.headerText, active && styles.headerTextActive]}>{label}</Text>
       <Text style={[styles.headerArrow, active && styles.headerArrowActive]}>{active ? (direction === "asc" ? "↑" : "↓") : "↕"}</Text>
     </Pressable>
   );
 }
 
+function FilterSelect({
+  label,
+  onSelect,
+  open,
+  options,
+  setOpen,
+  value,
+}: {
+  label: string;
+  onSelect: (option: string) => void;
+  open: boolean;
+  options: string[];
+  setOpen: (open: boolean) => void;
+  value: string;
+}) {
+  return (
+    <View style={styles.selectGroup}>
+      <Text style={styles.filterLabel}>{label}</Text>
+      <View style={styles.dropdownWrap}>
+        <Pressable
+          onPress={() => setOpen(!open)}
+          style={({ pressed }) => [styles.dropdownTrigger, open && styles.dropdownTriggerOpen, pressed && styles.dropdownTriggerPressed]}
+        >
+          <Text style={styles.dropdownValue}>{value}</Text>
+          <Text style={styles.dropdownIcon}>{open ? "▴" : "▾"}</Text>
+        </Pressable>
+
+        {open ? (
+          <View style={styles.dropdownMenu}>
+            <ScrollView nestedScrollEnabled style={styles.dropdownScroll}>
+              {options.map((option) => (
+                <Pressable
+                  key={option}
+                  onPress={() => {
+                    onSelect(option);
+                    setOpen(false);
+                  }}
+                  style={({ pressed }) => [
+                    styles.dropdownOption,
+                    value === option && styles.dropdownOptionActive,
+                    pressed && styles.dropdownOptionPressed,
+                  ]}
+                >
+                  <Text style={[styles.dropdownOptionText, value === option && styles.dropdownOptionTextActive]}>{option}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: "#0A0A0A",
+    backgroundColor: colors.shell,
     flex: 1,
   },
   content: {
@@ -457,101 +462,133 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     paddingBottom: spacing.xl,
   },
-  hero: {
-    backgroundColor: "#111111",
-    borderColor: "#262626",
-    borderRadius: 20,
-    borderWidth: 1,
+  pageHeader: {
     gap: spacing.sm,
-    padding: spacing.lg,
+    maxWidth: 820,
+    paddingTop: spacing.sm,
   },
-  eyebrow: {
-    color: "#A3A3A3",
+  pageEyebrow: {
+    color: colors.blueSoft,
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.8,
     textTransform: "uppercase",
   },
-  heroTitle: {
-    color: "#FAFAFA",
-    fontSize: 30,
+  pageTitle: {
+    color: colors.text,
+    fontSize: 34,
     fontWeight: "800",
-    lineHeight: 34,
+    lineHeight: 38,
   },
-  heroText: {
-    color: "#A3A3A3",
-    fontSize: 15,
-    lineHeight: 22,
-    maxWidth: 780,
+  pageText: {
+    color: colors.textMuted,
+    fontSize: 16,
+    lineHeight: 24,
+    maxWidth: 760,
   },
-  panel: {
-    backgroundColor: "#111111",
-    borderColor: "#262626",
-    borderRadius: 20,
+  statsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  statCard: {
+    backgroundColor: colors.panel,
+    borderColor: colors.border,
+    borderRadius: 18,
+    borderWidth: 1,
+    minWidth: 120,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 14,
+  },
+  statValue: {
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: "800",
+  },
+  statLabel: {
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: 4,
+    textTransform: "uppercase",
+  },
+  directoryShell: {
+    backgroundColor: colors.panel,
+    borderColor: colors.border,
+    borderRadius: 24,
     borderWidth: 1,
     gap: spacing.md,
     padding: spacing.md,
   },
-  panelHeader: {
+  directoryHeader: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  panelEyebrow: {
-    color: "#737373",
-    fontSize: 11,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
+  directoryHeaderText: {
+    gap: 4,
   },
-  panelTitle: {
-    color: "#FAFAFA",
-    fontSize: 24,
-    fontWeight: "700",
-    marginTop: 4,
-  },
-  countBadge: {
-    alignItems: "center",
-    backgroundColor: "#262626",
-    borderRadius: 12,
-    height: 42,
-    justifyContent: "center",
-    minWidth: 42,
-    paddingHorizontal: 12,
-  },
-  countBadgeText: {
-    color: "#FAFAFA",
-    fontSize: 15,
-    fontWeight: "800",
-  },
-  searchInput: {
-    backgroundColor: "#171717",
-    borderColor: "#2A2A2A",
-    borderRadius: 12,
-    borderWidth: 1,
-    color: "#FAFAFA",
-    fontSize: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-  },
-  chipRow: {
-    gap: spacing.sm,
-    paddingRight: spacing.sm,
-  },
-  filterGrid: {
-    gap: spacing.md,
-  },
-  filterColumn: {
-    gap: spacing.sm,
-  },
-  filterLabel: {
-    color: "#737373",
+  directoryEyebrow: {
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1.1,
     textTransform: "uppercase",
   },
-  miniChipRow: {
+  directoryTitle: {
+    color: colors.text,
+    fontSize: 24,
+    fontWeight: "700",
+  },
+  directoryCount: {
+    alignItems: "center",
+    backgroundColor: colors.panelAlt,
+    borderColor: colors.border,
+    borderRadius: 16,
+    borderWidth: 1,
+    justifyContent: "center",
+    minWidth: 56,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  directoryCountValue: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  searchInput: {
+    backgroundColor: colors.panelAlt,
+    borderColor: colors.border,
+    borderRadius: 16,
+    borderWidth: 1,
+    color: colors.text,
+    fontSize: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+  },
+  toolbar: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.md,
+  },
+  selectGroup: {
+    flex: 1,
+    gap: spacing.sm,
+    minWidth: 220,
+  },
+  filterStrip: {
+    gap: spacing.md,
+  },
+  filterBlock: {
+    gap: spacing.sm,
+  },
+  filterLabel: {
+    color: colors.textMuted,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+  },
+  chipRow: {
     gap: spacing.sm,
     paddingRight: spacing.sm,
   },
@@ -560,35 +597,35 @@ const styles = StyleSheet.create({
   },
   dropdownTrigger: {
     alignItems: "center",
-    backgroundColor: "#171717",
-    borderColor: "#2A2A2A",
-    borderRadius: 12,
+    backgroundColor: colors.panelAlt,
+    borderColor: colors.border,
+    borderRadius: 16,
     borderWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 15,
   },
   dropdownTriggerOpen: {
-    borderColor: "#525252",
+    borderColor: colors.blue,
   },
   dropdownTriggerPressed: {
     opacity: 0.9,
   },
   dropdownValue: {
-    color: "#FAFAFA",
+    color: colors.text,
     fontSize: 14,
     fontWeight: "700",
   },
   dropdownIcon: {
-    color: "#FAFAFA",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "800",
   },
   dropdownMenu: {
-    backgroundColor: "#171717",
-    borderColor: "#2A2A2A",
-    borderRadius: 12,
+    backgroundColor: colors.panelAlt,
+    borderColor: colors.border,
+    borderRadius: 16,
     borderWidth: 1,
     maxHeight: 240,
     overflow: "hidden",
@@ -597,39 +634,39 @@ const styles = StyleSheet.create({
     maxHeight: 240,
   },
   dropdownOption: {
-    borderTopColor: "#262626",
+    borderTopColor: colors.border,
     borderTopWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
   },
   dropdownOptionActive: {
-    backgroundColor: "#262626",
+    backgroundColor: colors.blue,
   },
   dropdownOptionPressed: {
     opacity: 0.9,
   },
   dropdownOptionText: {
-    color: "#E5E5E5",
+    color: colors.textSoft,
     fontSize: 14,
     fontWeight: "600",
   },
   dropdownOptionTextActive: {
-    color: "#FAFAFA",
+    color: colors.text,
   },
-  table: {
-    borderColor: "#2A2A2A",
-    borderRadius: 16,
+  tableWrap: {
+    borderColor: colors.border,
+    borderRadius: 20,
     borderWidth: 1,
     overflow: "hidden",
   },
   tableHeader: {
     alignItems: "center",
-    backgroundColor: "#111111",
-    borderBottomColor: "#2A2A2A",
+    backgroundColor: colors.panelAlt,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: "row",
     minHeight: 54,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
   },
   headerButton: {
     alignItems: "center",
@@ -640,101 +677,102 @@ const styles = StyleSheet.create({
   headerPressed: {
     opacity: 0.82,
   },
-  headerCell: {
-    color: "#737373",
+  headerText: {
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1,
     textTransform: "uppercase",
   },
-  headerCellActive: {
-    color: "#FAFAFA",
+  headerTextActive: {
+    color: colors.text,
   },
   headerArrow: {
-    color: "#525252",
+    color: "#475569",
     fontSize: 11,
     fontWeight: "800",
   },
   headerArrowActive: {
-    color: "#FAFAFA",
+    color: colors.text,
   },
   tableRow: {
     alignItems: "center",
+    backgroundColor: colors.panel,
     flexDirection: "row",
-    minHeight: 54,
-    paddingHorizontal: 12,
+    minHeight: 72,
+    paddingHorizontal: 16,
   },
-  rowLight: {
-    backgroundColor: "#141414",
+  tableRowBorder: {
+    borderBottomColor: colors.border,
+    borderBottomWidth: 1,
   },
-  rowWhite: {
-    backgroundColor: "#101010",
-  },
-  rowPressed: {
-    opacity: 0.86,
+  tableRowPressed: {
+    backgroundColor: colors.panelAlt,
   },
   rowCell: {
     justifyContent: "center",
   },
+  rowText: {
+    color: colors.textSoft,
+    fontSize: 14,
+    fontWeight: "600",
+  },
   rankCell: {
-    width: 56,
+    width: 76,
   },
   teamCell: {
-    flex: 1.6,
+    flex: 1.4,
     paddingRight: 12,
   },
-  metaCell: {
-    flex: 1.2,
+  stadiumCell: {
+    flex: 1.45,
     paddingRight: 12,
   },
-  statusCell: {
-    minWidth: 100,
+  cityCell: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  visitCell: {
+    minWidth: 132,
   },
   rankValue: {
-    color: "#FAFAFA",
+    color: colors.text,
     fontSize: 18,
     fontWeight: "800",
   },
   teamName: {
-    color: "#FAFAFA",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "800",
-    lineHeight: 20,
-    textTransform: "uppercase",
   },
-  teamMeta: {
-    color: "#A3A3A3",
-    fontSize: 11,
-    fontWeight: "700",
-    marginTop: 2,
-  },
-  metaValue: {
-    color: "#D4D4D4",
-    fontSize: 14,
+  teamLeague: {
+    color: colors.textMuted,
+    fontSize: 12,
     fontWeight: "600",
+    marginTop: 4,
   },
-  statusText: {
-    color: "#A3A3A3",
-    fontSize: 13,
+  primaryValue: {
+    color: colors.text,
+  },
+  secondaryValue: {
+    color: colors.textSoft,
+  },
+  visitValue: {
+    color: colors.blueSoft,
     fontWeight: "700",
-  },
-  statusTextStrong: {
-    color: "#FAFAFA",
-    fontSize: 13,
-    fontWeight: "800",
   },
   emptyState: {
-    backgroundColor: "#111111",
+    backgroundColor: colors.panel,
     padding: spacing.xl,
   },
   emptyTitle: {
-    color: "#FAFAFA",
+    color: colors.text,
     fontSize: 18,
     fontWeight: "800",
     textAlign: "center",
   },
   emptyText: {
-    color: "#A3A3A3",
+    color: colors.textMuted,
     fontSize: 14,
     lineHeight: 20,
     marginTop: spacing.sm,

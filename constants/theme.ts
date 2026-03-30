@@ -13,6 +13,17 @@ export const colors = {
   plum: "#4E345A",
   muted: "#6C6255",
   white: "#FFFFFF",
+  shell: "#0A0A0A",
+  panel: "#111111",
+  panelAlt: "#171717",
+  border: "#262626",
+  text: "#F8FAFC",
+  textMuted: "#94A3B8",
+  textSoft: "#CBD5E1",
+  blue: "#2563EB",
+  blueSoft: "#93C5FD",
+  success: "#10B981",
+  warning: "#F59E0B",
 };
 
 export const spacing = {
