@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { spacing } from "../constants/theme";
+import { colors, spacing } from "../constants/theme";
 import { hasCoordinates, Stadium } from "../lib/stadiums";
 
 type StadiumMapProps = {
@@ -9,7 +9,7 @@ type StadiumMapProps = {
   selectedId?: string | null;
 };
 
-const MAP_HEIGHT = 520;
+const MAP_HEIGHT = 500;
 
 function toMapPoint(latitude: number, longitude: number) {
   const leftValue = Math.min(96, Math.max(4, ((longitude + 180) / 360) * 100));
@@ -41,7 +41,6 @@ function getCountryGroups(stadiums: Stadium[]) {
 export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) {
   const mappableStadiums = stadiums.filter(hasCoordinates);
   const countryGroups = getCountryGroups(mappableStadiums);
-  const topCountries = countryGroups.slice(0, 10);
   const selectedStadium = mappableStadiums.find((stadium) => stadium.id === selectedId) ?? mappableStadiums[0] ?? null;
   const selectedPoint =
     selectedStadium && selectedStadium.latitude != null && selectedStadium.longitude != null
@@ -51,46 +50,7 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
   return (
     <View style={styles.frame}>
       <View style={styles.stage}>
-        <View style={styles.stageGlowPrimary} />
-        <View style={styles.stageGlowSecondary} />
-        <View style={[styles.landmass, styles.landmassNorthAmerica]} />
-        <View style={[styles.landmass, styles.landmassSouthAmerica]} />
-        <View style={[styles.landmass, styles.landmassEurope]} />
-        <View style={[styles.landmass, styles.landmassAfrica]} />
-        <View style={[styles.landmass, styles.landmassMiddleEast]} />
-
-        <View style={styles.stageHeader}>
-          <View style={styles.stageHeaderText}>
-            <Text style={styles.eyebrow}>MAP VIEW</Text>
-            <Text style={styles.title}>Stadions på tværs af regioner</Text>
-            <Text style={styles.text}>Zoom ikke med fingrene endnu. Brug i stedet markører og hotspots til at bevæge dig hurtigt rundt.</Text>
-          </View>
-
-          <View style={styles.legend}>
-            <LegendPill label="Stadions" tone="default" />
-            <LegendPill label="Valgt" tone="selected" />
-          </View>
-        </View>
-
-        <View style={styles.summaryDock}>
-          <StatPill label="Punkter" value={String(mappableStadiums.length)} />
-          <StatPill label="Lande" value={String(countryGroups.length)} />
-          <StatPill label="Hotspot" value={topCountries[0]?.country ?? "Ingen"} />
-        </View>
-
-        <View style={[styles.regionLabel, { left: 18, top: 112 }]}>
-          <Text style={styles.regionLabelText}>North America</Text>
-        </View>
-        <View style={[styles.regionLabel, { left: "24%", top: "72%" }]}>
-          <Text style={styles.regionLabelText}>South America</Text>
-        </View>
-        <View style={[styles.regionLabel, { left: "47%", top: 108 }]}>
-          <Text style={styles.regionLabelText}>Europe</Text>
-        </View>
-        <View style={[styles.regionLabel, { left: "54%", top: "62%" }]}>
-          <Text style={styles.regionLabelText}>Middle East</Text>
-        </View>
-
+        <View style={styles.stageGlow} />
         <View style={styles.gridOverlay}>
           <View style={[styles.gridLineHorizontal, { top: "25%" }]} />
           <View style={[styles.gridLineHorizontal, { top: "50%" }]} />
@@ -98,6 +58,32 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
           <View style={[styles.gridLineVertical, { left: "25%" }]} />
           <View style={[styles.gridLineVertical, { left: "50%" }]} />
           <View style={[styles.gridLineVertical, { left: "75%" }]} />
+        </View>
+
+        <View style={[styles.continentShape, styles.northAmerica]} />
+        <View style={[styles.continentShape, styles.southAmerica]} />
+        <View style={[styles.continentShape, styles.europe]} />
+        <View style={[styles.continentShape, styles.africa]} />
+        <View style={[styles.continentShape, styles.middleEast]} />
+
+        <View style={styles.mapHeader}>
+          <View style={styles.mapHeaderText}>
+            <Text style={styles.eyebrow}>Map View</Text>
+            <Text style={styles.title}>Grounds with saved coordinates</Text>
+            <Text style={styles.text}>Select a point to jump into the chosen ground profile.</Text>
+          </View>
+
+          <View style={styles.legend}>
+            <LegendItem label="Ground" active={false} />
+            <LegendItem label="Selected" active />
+          </View>
+        </View>
+
+        <View style={styles.regionLabels}>
+          <RegionLabel label="North America" left="8%" top="26%" />
+          <RegionLabel label="South America" left="22%" top="72%" />
+          <RegionLabel label="Europe" left="49%" top="24%" />
+          <RegionLabel label="Middle East" left="63%" top="56%" />
         </View>
 
         {mappableStadiums.map((stadium) => {
@@ -112,12 +98,12 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
               style={({ pressed }) => [
                 styles.marker,
                 point.style,
-                active && styles.markerActive,
-                pressed && styles.markerPressed,
+                active ? styles.markerActive : null,
+                pressed ? styles.markerPressed : null,
               ]}
             >
-              {active ? <View style={styles.markerPulse} /> : null}
-              <View style={[styles.markerDot, active && styles.markerDotActive]} />
+              {active ? <View style={styles.markerHalo} /> : null}
+              <View style={[styles.markerDot, active ? styles.markerDotActive : null]} />
             </Pressable>
           );
         })}
@@ -131,60 +117,46 @@ export function StadiumMap({ stadiums, onSelect, selectedId }: StadiumMapProps) 
               selectedPoint.topValue < 22 ? styles.calloutBelow : styles.calloutAbove,
             ]}
           >
-            <Text style={styles.calloutCountry}>{selectedStadium.country}</Text>
-            <Text style={styles.calloutTeam}>{selectedStadium.team}</Text>
-            <Text style={styles.calloutName}>{selectedStadium.stadiumName}</Text>
+            <Text style={styles.calloutEyebrow}>{selectedStadium.country}</Text>
+            <Text style={styles.calloutTitle}>{selectedStadium.team}</Text>
+            <Text style={styles.calloutText}>{selectedStadium.stadiumName}</Text>
             <Text style={styles.calloutMeta}>
               {selectedStadium.city} · {selectedStadium.league}
             </Text>
           </View>
         ) : null}
 
-        <View style={styles.hotspotDock}>
-          <View style={styles.hotspotHeader}>
-            <Text style={styles.hotspotTitle}>Hotspots</Text>
-            <Text style={styles.hotspotText}>Vælg et land og spring direkte til en relevant markør.</Text>
-          </View>
-
-          <View style={styles.countryGrid}>
-            {topCountries.map((entry) => {
-              const active = selectedStadium?.country === entry.country;
-
-              return (
-                <Pressable
-                  key={entry.country}
-                  onPress={() => onSelect(entry.first.id)}
-                  style={({ pressed }) => [
-                    styles.countryCard,
-                    active && styles.countryCardActive,
-                    pressed && styles.countryCardPressed,
-                  ]}
-                >
-                  <Text style={[styles.countryName, active && styles.countryNameActive]}>{entry.country}</Text>
-                  <Text style={[styles.countryCount, active && styles.countryCountActive]}>{entry.count} stadioner</Text>
-                </Pressable>
-              );
-            })}
-          </View>
+        <View style={styles.summaryBar}>
+          <SummaryPill label="Points" value={String(mappableStadiums.length)} />
+          <SummaryPill label="Countries" value={String(countryGroups.length)} />
+          <SummaryPill label="Top cluster" value={countryGroups[0]?.country ?? "None"} />
         </View>
       </View>
     </View>
   );
 }
 
-function StatPill({ label, value }: { label: string; value: string }) {
+function RegionLabel({ label, left, top }: { label: string; left: `${number}%`; top: `${number}%` }) {
   return (
-    <View style={styles.statPill}>
-      <Text style={styles.statPillValue}>{value}</Text>
-      <Text style={styles.statPillLabel}>{label}</Text>
+    <View style={[styles.regionLabel, { left, top }]}>
+      <Text style={styles.regionLabelText}>{label}</Text>
     </View>
   );
 }
 
-function LegendPill({ label, tone }: { label: string; tone: "default" | "selected" }) {
+function SummaryPill({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.legendPill}>
-      <View style={[styles.legendDot, tone === "selected" && styles.legendDotSelected]} />
+    <View style={styles.summaryPill}>
+      <Text style={styles.summaryValue}>{value}</Text>
+      <Text style={styles.summaryLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function LegendItem({ label, active }: { label: string; active: boolean }) {
+  return (
+    <View style={styles.legendItem}>
+      <View style={[styles.legendDot, active ? styles.legendDotActive : null]} />
       <Text style={styles.legendText}>{label}</Text>
     </View>
   );
@@ -196,75 +168,83 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   stage: {
-    backgroundColor: "#0B1020",
-    borderColor: "#1E293B",
+    backgroundColor: colors.panel,
+    borderColor: colors.border,
     borderRadius: 28,
     borderWidth: 1,
     height: MAP_HEIGHT,
     overflow: "hidden",
     position: "relative",
   },
-  stageGlowPrimary: {
-    backgroundColor: "rgba(56,189,248,0.18)",
+  stageGlow: {
+    backgroundColor: "rgba(37,99,235,0.08)",
     borderRadius: 999,
-    height: 260,
+    height: 320,
     position: "absolute",
-    right: -40,
-    top: -20,
-    width: 260,
+    right: -90,
+    top: -60,
+    width: 320,
   },
-  stageGlowSecondary: {
-    backgroundColor: "rgba(148,163,184,0.12)",
-    borderRadius: 999,
-    height: 220,
-    left: -50,
+  gridOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  gridLineHorizontal: {
+    backgroundColor: "rgba(148,163,184,0.06)",
+    height: 1,
+    left: 0,
     position: "absolute",
-    top: 170,
-    width: 220,
+    right: 0,
   },
-  landmass: {
-    backgroundColor: "#132238",
-    borderColor: "rgba(148,163,184,0.08)",
+  gridLineVertical: {
+    backgroundColor: "rgba(148,163,184,0.06)",
+    bottom: 0,
+    position: "absolute",
+    top: 0,
+    width: 1,
+  },
+  continentShape: {
+    backgroundColor: "#171C26",
+    borderColor: "rgba(148,163,184,0.05)",
     borderRadius: 999,
     borderWidth: 1,
     position: "absolute",
   },
-  landmassNorthAmerica: {
-    height: 140,
-    left: 28,
-    top: 140,
-    transform: [{ rotate: "-9deg" }],
-    width: 170,
+  northAmerica: {
+    height: 122,
+    left: 42,
+    top: 138,
+    transform: [{ rotate: "-10deg" }],
+    width: 154,
   },
-  landmassSouthAmerica: {
-    height: 160,
-    left: 145,
+  southAmerica: {
+    height: 148,
+    left: 146,
     top: 286,
     transform: [{ rotate: "14deg" }],
-    width: 92,
+    width: 86,
   },
-  landmassEurope: {
-    height: 84,
-    right: 182,
-    top: 152,
+  europe: {
+    height: 72,
+    right: 192,
+    top: 148,
     transform: [{ rotate: "-8deg" }],
-    width: 112,
+    width: 104,
   },
-  landmassAfrica: {
-    height: 164,
-    right: 170,
-    top: 228,
+  africa: {
+    height: 154,
+    right: 176,
+    top: 224,
     transform: [{ rotate: "8deg" }],
-    width: 106,
+    width: 94,
   },
-  landmassMiddleEast: {
-    height: 96,
-    right: 72,
-    top: 246,
+  middleEast: {
+    height: 86,
+    right: 70,
+    top: 248,
     transform: [{ rotate: "-12deg" }],
-    width: 124,
+    width: 122,
   },
-  stageHeader: {
+  mapHeader: {
     alignItems: "flex-start",
     flexDirection: "row",
     gap: spacing.md,
@@ -272,26 +252,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
   },
-  stageHeaderText: {
+  mapHeaderText: {
     flex: 1,
     gap: 6,
-    maxWidth: 440,
+    maxWidth: 460,
   },
   eyebrow: {
-    color: "#93C5FD",
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: "800",
-    letterSpacing: 1.8,
+    letterSpacing: 1.4,
     textTransform: "uppercase",
   },
   title: {
-    color: "#F8FAFC",
-    fontSize: 28,
+    color: colors.text,
+    fontSize: 26,
     fontWeight: "800",
     lineHeight: 32,
   },
   text: {
-    color: "#94A3B8",
+    color: colors.textSoft,
     fontSize: 14,
     lineHeight: 21,
   },
@@ -302,10 +282,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     maxWidth: 220,
   },
-  legendPill: {
+  legendItem: {
     alignItems: "center",
-    backgroundColor: "rgba(15,23,42,0.74)",
-    borderColor: "rgba(148,163,184,0.16)",
+    backgroundColor: colors.panelAlt,
+    borderColor: colors.border,
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: "row",
@@ -314,73 +294,31 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   legendDot: {
-    backgroundColor: "#38BDF8",
+    backgroundColor: colors.blue,
     borderRadius: 999,
     height: 8,
     width: 8,
   },
-  legendDotSelected: {
-    backgroundColor: "#F8FAFC",
+  legendDotActive: {
+    backgroundColor: colors.white,
   },
   legendText: {
-    color: "#E2E8F0",
+    color: colors.textSoft,
     fontSize: 12,
     fontWeight: "700",
   },
-  summaryDock: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    left: spacing.lg,
-    position: "absolute",
-    top: 124,
-    zIndex: 3,
-  },
-  statPill: {
-    backgroundColor: "rgba(15,23,42,0.84)",
-    borderColor: "rgba(148,163,184,0.16)",
-    borderRadius: 18,
-    borderWidth: 1,
-    minWidth: 108,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  statPillValue: {
-    color: "#F8FAFC",
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  statPillLabel: {
-    color: "#94A3B8",
-    fontSize: 12,
-    marginTop: 3,
+  regionLabels: {
+    ...StyleSheet.absoluteFillObject,
   },
   regionLabel: {
     position: "absolute",
   },
   regionLabelText: {
-    color: "rgba(148,163,184,0.55)",
+    color: "rgba(148,163,184,0.5)",
     fontSize: 11,
     fontWeight: "800",
-    letterSpacing: 1.1,
+    letterSpacing: 1,
     textTransform: "uppercase",
-  },
-  gridOverlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  gridLineHorizontal: {
-    backgroundColor: "rgba(148,163,184,0.08)",
-    height: 1,
-    left: 0,
-    position: "absolute",
-    right: 0,
-  },
-  gridLineVertical: {
-    backgroundColor: "rgba(148,163,184,0.08)",
-    bottom: 0,
-    position: "absolute",
-    top: 0,
-    width: 1,
   },
   marker: {
     alignItems: "center",
@@ -396,32 +334,32 @@ const styles = StyleSheet.create({
     zIndex: 8,
   },
   markerPressed: {
-    opacity: 0.85,
+    opacity: 0.86,
   },
-  markerPulse: {
-    backgroundColor: "rgba(56,189,248,0.18)",
+  markerHalo: {
+    backgroundColor: "rgba(37,99,235,0.18)",
     borderRadius: 999,
     height: 24,
     position: "absolute",
     width: 24,
   },
   markerDot: {
-    backgroundColor: "#38BDF8",
-    borderColor: "#E2E8F0",
+    backgroundColor: colors.blue,
+    borderColor: colors.text,
     borderRadius: 999,
     borderWidth: 2,
     height: 10,
     width: 10,
   },
   markerDotActive: {
-    backgroundColor: "#F8FAFC",
-    borderColor: "#38BDF8",
+    backgroundColor: colors.white,
+    borderColor: colors.blue,
     height: 14,
     width: 14,
   },
   callout: {
-    backgroundColor: "rgba(15,23,42,0.94)",
-    borderColor: "rgba(148,163,184,0.18)",
+    backgroundColor: colors.shell,
+    borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 1,
     maxWidth: 220,
@@ -443,89 +381,56 @@ const styles = StyleSheet.create({
   calloutLeft: {
     marginLeft: -194,
   },
-  calloutCountry: {
-    color: "#93C5FD",
+  calloutEyebrow: {
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: "800",
     letterSpacing: 1,
     textTransform: "uppercase",
   },
-  calloutTeam: {
-    color: "#F8FAFC",
+  calloutTitle: {
+    color: colors.text,
     fontSize: 15,
     fontWeight: "800",
     marginTop: 4,
   },
-  calloutName: {
-    color: "#E2E8F0",
+  calloutText: {
+    color: colors.textSoft,
     fontSize: 13,
     fontWeight: "700",
     marginTop: 2,
   },
   calloutMeta: {
-    color: "#94A3B8",
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 5,
   },
-  hotspotDock: {
-    backgroundColor: "rgba(15,23,42,0.84)",
-    borderTopColor: "rgba(148,163,184,0.14)",
-    borderTopWidth: 1,
-    bottom: 0,
-    gap: spacing.sm,
-    left: 0,
-    padding: spacing.md,
-    position: "absolute",
-    right: 0,
-  },
-  hotspotHeader: {
-    gap: 4,
-  },
-  hotspotTitle: {
-    color: "#F8FAFC",
-    fontSize: 16,
-    fontWeight: "800",
-  },
-  hotspotText: {
-    color: "#94A3B8",
-    fontSize: 13,
-    lineHeight: 20,
-  },
-  countryGrid: {
+  summaryBar: {
+    bottom: spacing.md,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,
+    left: spacing.md,
+    position: "absolute",
+    right: spacing.md,
   },
-  countryCard: {
-    backgroundColor: "#111827",
-    borderColor: "#1F2937",
-    borderRadius: 16,
+  summaryPill: {
+    backgroundColor: colors.shell,
+    borderColor: colors.border,
+    borderRadius: 18,
     borderWidth: 1,
-    minWidth: 134,
+    minWidth: 108,
     paddingHorizontal: 12,
-    paddingVertical: 11,
+    paddingVertical: 10,
   },
-  countryCardActive: {
-    backgroundColor: "#1D4ED8",
-    borderColor: "#60A5FA",
-  },
-  countryCardPressed: {
-    opacity: 0.86,
-  },
-  countryName: {
-    color: "#E5E7EB",
-    fontSize: 14,
+  summaryValue: {
+    color: colors.text,
+    fontSize: 18,
     fontWeight: "800",
   },
-  countryNameActive: {
-    color: "#F8FAFC",
-  },
-  countryCount: {
-    color: "#94A3B8",
+  summaryLabel: {
+    color: colors.textMuted,
     fontSize: 12,
-    marginTop: 4,
-  },
-  countryCountActive: {
-    color: "#DBEAFE",
+    marginTop: 3,
   },
 });
