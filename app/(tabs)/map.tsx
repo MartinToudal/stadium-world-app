@@ -60,13 +60,10 @@ export default function MapScreen() {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
-          <View style={styles.heroOrbPrimary} />
-          <View style={styles.heroOrbSecondary} />
           <Text style={styles.eyebrow}>GEOGRAFI</Text>
-          <Text style={styles.title}>Se stadioner efter region på et rigtigt koordinatkort.</Text>
+          <Text style={styles.title}>Find stadioner på kortet og bevæg dig hurtigt mellem hotspots.</Text>
           <Text style={styles.text}>
-            Få et hurtigt geografisk overblik over, hvor klubberne ligger, og hop direkte videre til de stadioner,
-            du vil udforske nærmere.
+            Brug regioner, samlinger og kapacitet til at skære kortet til, og åbn derefter den stadionprofil du vil videre med.
           </Text>
           <View style={styles.heroStats}>
             <StatCard inverted label="Region" value={region === "World" ? "Global" : region} />
@@ -118,16 +115,6 @@ export default function MapScreen() {
           stadiums={regionStadiums}
         />
 
-        {!mappableRegionStadiums.length ? (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Kortdata kommer løbende</Text>
-            <Text style={styles.sectionText}>
-              Denne del af listen mangler stadig koordinater. Klubberne er med i overblikket nu, og kortlaget bliver
-              udfyldt efterhaanden som vi beriger data.
-            </Text>
-          </View>
-        ) : null}
-
         {selectedStadium ? (
           <View style={styles.selectedPanel}>
             <View style={styles.selectedHeader}>
@@ -135,6 +122,9 @@ export default function MapScreen() {
                 <Text style={styles.selectedEyebrow}>{selectedStadium.country}</Text>
                 <Text style={styles.selectedTitle}>{selectedStadium.team}</Text>
                 <Text style={styles.selectedSubtitle}>{selectedStadium.stadiumName}</Text>
+                <Text style={styles.selectedMeta}>
+                  {selectedStadium.city} · {selectedStadium.league}
+                </Text>
               </View>
             </View>
             <View style={styles.selectedStats}>
@@ -199,7 +189,7 @@ export default function MapScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Udvalgte stadioner</Text>
           <Text style={styles.sectionText}>
-            Et hurtigt udvalg af store stadioner i {region === "World" ? "hele datasættet" : region.toLowerCase()}.
+            Et hurtigt udvalg af stadioner i {region === "World" ? "hele datasættet" : region.toLowerCase()}.
           </Text>
         </View>
 
@@ -258,7 +248,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: colors.paper,
+    backgroundColor: "#0A0A0A",
     flex: 1,
   },
   content: {
@@ -267,49 +257,29 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   hero: {
-    backgroundColor: colors.moss,
-    borderRadius: 32,
+    backgroundColor: "#111111",
+    borderColor: "#262626",
+    borderRadius: 28,
+    borderWidth: 1,
     gap: spacing.sm,
-    overflow: "hidden",
     padding: spacing.lg,
-    position: "relative",
-  },
-  heroOrbPrimary: {
-    backgroundColor: colors.accent,
-    borderRadius: 999,
-    height: 180,
-    opacity: 0.3,
-    position: "absolute",
-    right: -30,
-    top: -20,
-    width: 180,
-  },
-  heroOrbSecondary: {
-    backgroundColor: colors.sky,
-    borderRadius: 999,
-    height: 120,
-    left: -20,
-    opacity: 0.18,
-    position: "absolute",
-    top: 110,
-    width: 120,
   },
   eyebrow: {
-    color: "#D7F1E7",
+    color: "#93C5FD",
     fontSize: 12,
     fontWeight: "800",
     letterSpacing: 2,
   },
   title: {
-    color: colors.white,
-    fontSize: 32,
-    fontWeight: "900",
-    lineHeight: 38,
+    color: "#F8FAFC",
+    fontSize: 30,
+    fontWeight: "800",
+    lineHeight: 34,
   },
   text: {
-    color: "#E4F4EF",
-    fontSize: 16,
-    lineHeight: 24,
+    color: "#94A3B8",
+    fontSize: 15,
+    lineHeight: 22,
   },
   heroStats: {
     flexDirection: "row",
@@ -325,12 +295,12 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   sectionTitle: {
-    color: colors.ink,
+    color: "#F8FAFC",
     fontSize: 22,
     fontWeight: "800",
   },
   sectionText: {
-    color: colors.muted,
+    color: "#94A3B8",
     fontSize: 15,
     lineHeight: 22,
   },
@@ -340,9 +310,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   selectedPanel: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
-    borderRadius: 28,
+    backgroundColor: "#111111",
+    borderColor: "#262626",
+    borderRadius: 24,
     borderWidth: 1,
     gap: spacing.md,
     padding: spacing.lg,
@@ -358,41 +328,46 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   selectedEyebrow: {
-    color: colors.gold,
+    color: "#93C5FD",
     fontSize: 12,
     fontWeight: "800",
     letterSpacing: 1.2,
     textTransform: "uppercase",
   },
   selectedTitle: {
-    color: colors.ink,
+    color: "#F8FAFC",
     fontSize: 28,
-    fontWeight: "900",
+    fontWeight: "800",
   },
   selectedSubtitle: {
-    color: colors.navy,
+    color: "#E2E8F0",
     fontSize: 16,
     fontWeight: "700",
   },
+  selectedMeta: {
+    color: "#94A3B8",
+    fontSize: 14,
+    marginTop: 2,
+  },
   favoritePill: {
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
   favoritePillActive: {
-    backgroundColor: "#FFF0D6",
-    borderColor: colors.accentSoft,
+    backgroundColor: "#1D4ED8",
+    borderColor: "#60A5FA",
   },
   favoritePillText: {
-    color: colors.ink,
+    color: "#E5E7EB",
     fontSize: 13,
     fontWeight: "800",
   },
   favoritePillTextActive: {
-    color: colors.accent,
+    color: "#F8FAFC",
   },
   selectedStats: {
     flexDirection: "row",
@@ -400,20 +375,20 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   miniStat: {
-    backgroundColor: colors.paper,
+    backgroundColor: "#171717",
     borderRadius: 18,
     minWidth: 120,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
   miniStatLabel: {
-    color: colors.muted,
+    color: "#94A3B8",
     fontSize: 12,
     fontWeight: "800",
     textTransform: "uppercase",
   },
   miniStatValue: {
-    color: colors.ink,
+    color: "#F8FAFC",
     fontSize: 15,
     fontWeight: "800",
     marginTop: 4,
@@ -429,32 +404,32 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   primaryAction: {
-    backgroundColor: colors.accent,
+    backgroundColor: "#1D4ED8",
     borderRadius: 18,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   primaryActionText: {
-    color: colors.white,
+    color: "#F8FAFC",
     fontSize: 14,
     fontWeight: "800",
   },
   secondaryAction: {
-    backgroundColor: colors.paper,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 18,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   secondaryActionText: {
-    color: colors.ink,
+    color: "#E5E7EB",
     fontSize: 14,
     fontWeight: "800",
   },
   statCard: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
+    backgroundColor: "#171717",
+    borderColor: "#2A2A2A",
     borderRadius: 18,
     borderWidth: 1,
     minWidth: 120,
@@ -462,25 +437,25 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   statCardInverted: {
-    backgroundColor: "rgba(255,255,255,0.08)",
-    borderColor: "rgba(255,255,255,0.12)",
+    backgroundColor: "#171717",
+    borderColor: "#262626",
   },
   statValue: {
-    color: colors.navy,
+    color: "#F8FAFC",
     fontSize: 22,
-    fontWeight: "900",
+    fontWeight: "800",
   },
   statValueInverted: {
-    color: colors.white,
+    color: "#F8FAFC",
     fontSize: 18,
   },
   statLabel: {
-    color: colors.muted,
+    color: "#94A3B8",
     fontSize: 13,
     marginTop: 4,
   },
   statLabelInverted: {
-    color: "#D7F1E7",
+    color: "#94A3B8",
   },
   cardColumn: {
     gap: spacing.md,
@@ -491,20 +466,20 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   regionCard: {
-    backgroundColor: colors.white,
-    borderColor: colors.line,
+    backgroundColor: "#111111",
+    borderColor: "#262626",
     borderRadius: 20,
     borderWidth: 1,
     minWidth: 150,
     padding: spacing.md,
   },
   regionCardTitle: {
-    color: colors.ink,
+    color: "#F8FAFC",
     fontSize: 15,
     fontWeight: "800",
   },
   regionCardText: {
-    color: colors.muted,
+    color: "#94A3B8",
     fontSize: 13,
     marginTop: 4,
   },
